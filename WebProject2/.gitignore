@@ -15,7 +15,7 @@ __pycache__/
 *.sln.docstates
 
 # Auto-generated virtual environment
-/env/
+#/env/
 
 # Auto-generated web.config
 /web.config
