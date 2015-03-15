@@ -52,6 +52,7 @@
     <Folder Include="app\templates\" />
     <Folder Include="app\templates\app\" />
     <Folder Include="DjangoWebProject\" />
+    <Folder Include="wheelhouse\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="app\static\app\testImages\Fit01.jpg" />
@@ -91,6 +92,7 @@
     <Content Include="app\templates\app\loginpartial.html" />
     <Content Include="web.config" />
     <Content Include="web.debug.config" />
+    <Content Include="wheelhouse\numpy-1.9.2+mkl-cp27-none-win32.whl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="readme.mht">
