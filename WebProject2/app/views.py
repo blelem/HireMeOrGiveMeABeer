@@ -6,6 +6,7 @@ from django.shortcuts import render
 from django.http import HttpRequest
 from django.template import RequestContext
 from datetime import datetime
+import Alignment2D
 
 def home(request):
     """Renders the home page."""
@@ -23,6 +24,11 @@ def home(request):
 def contact(request):
     """Renders the contact page."""
     assert isinstance(request, HttpRequest)
+
+    (kp1Matches, kp2Matches) = Alignment2D.SetupTheStuff()
+    Alignment2D.LinearLeastSquare ( kp1Matches, kp2Matches ) 
+	#Alignment2D.Levenberg(kp1Matches, kp2Matches) 
+
     return render(
         request,
         'app/contact.html',
