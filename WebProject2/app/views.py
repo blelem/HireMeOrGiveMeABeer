@@ -26,7 +26,7 @@ def contact(request):
     assert isinstance(request, HttpRequest)
 
     (kp1Matches, kp2Matches) = Alignment2D.SetupTheStuff()
-    Alignment2D.LinearLeastSquare ( kp1Matches, kp2Matches ) 
+    Transform = Alignment2D.LinearLeastSquare ( kp1Matches, kp2Matches ) 
 	#Alignment2D.Levenberg(kp1Matches, kp2Matches) 
 
     return render(
@@ -34,7 +34,7 @@ def contact(request):
         'app/contact.html',
         context_instance = RequestContext(request,
         {
-            'title':'Contact',
+            'title': Transform,
             'message':'Your contact page.',
             'year':datetime.now().year,
         })

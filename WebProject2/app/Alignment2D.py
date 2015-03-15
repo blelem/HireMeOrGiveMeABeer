@@ -12,8 +12,8 @@ def SetupTheStuff():
     
     # import Alignment2D
     #  (kp1Matches, kp2Matches) = Alignment2D.SetupTheStuff()
-    img1 = cv2.imread('oslo_panorama_1.jpg', cv2.CV_LOAD_IMAGE_COLOR)
-    img2 = cv2.imread('oslo_panorama_2.jpg', cv2.CV_LOAD_IMAGE_COLOR)
+    img1 = cv2.imread('app/static/app/testImages/oslo_panorama_1.jpg', cv2.CV_LOAD_IMAGE_COLOR)
+    img2 = cv2.imread('app/static/app/testImages/oslo_panorama_2.jpg', cv2.CV_LOAD_IMAGE_COLOR)
     fd = cv2.FeatureDetector_create('SIFT')
     keypoints1 = fd.detect(img1)
     keypoints2 = fd.detect(img2)
