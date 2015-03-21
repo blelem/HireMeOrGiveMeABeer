@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{e4dd0a29-3061-4a52-bf9e-5498fd828b4e}</ProjectGuid>
     <ProjectHome />
-    <StartupFile>Top.py</StartupFile>
+    <StartupFile>Local_NoServer\Top.py</StartupFile>
     <SearchPath />
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
@@ -21,16 +21,22 @@
     <PtvsTargetsFile>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets</PtvsTargetsFile>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="104_Portrait_Lighting.jpg" />
-    <Content Include="Oslo_Panorama_1.jpg" />
-    <Content Include="Oslo_Panorama_2.jpg" />
-    <Content Include="Oslo_Panorama_full.jpg" />
+    <Content Include="app\static\app\testImages\Fit01.jpg" />
+    <Content Include="app\static\app\testImages\Fit02.jpg" />
+    <Content Include="app\static\app\testImages\Fit03.jpg" />
+    <Content Include="app\static\app\testImages\Oslo_Panorama_1.jpg" />
+    <Content Include="app\static\app\testImages\Oslo_Panorama_2.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Alignment2D.py" />
-    <Compile Include="Top.py">
-      <SubType>Code</SubType>
-    </Compile>
+    <Folder Include="app\" />
+    <Folder Include="app\static\" />
+    <Folder Include="app\static\app\" />
+    <Folder Include="app\static\app\testImages\" />
+    <Folder Include="Local_NoServer\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="app\Alignment2D.py" />
+    <Compile Include="Local_NoServer\Top.py" />
   </ItemGroup>
   <Import Project="$(PtvsTargetsFile)" Condition="Exists($(PtvsTargetsFile))" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="!Exists($(PtvsTargetsFile))" />

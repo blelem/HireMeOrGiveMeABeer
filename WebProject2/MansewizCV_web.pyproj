@@ -2,10 +2,11 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
-    <Name>DjangoWebProject</Name>
-    <RootNamespace>DjangoWebProject</RootNamespace>
+    <Name>MansewizCV_web</Name>
+    <RootNamespace>MansewizCV_web</RootNamespace>
     <InterpreterId>{41d8a39d-4944-4536-904d-1ba5e6e9b3d0}</InterpreterId>
     <InterpreterVersion>2.7</InterpreterVersion>
+    <DjangoSettingsModule>DjangoWebProject.settings</DjangoSettingsModule>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -60,7 +61,6 @@
     <Content Include="app\static\app\testImages\Oslo_Panorama_1.jpg" />
     <Content Include="app\static\app\testImages\Oslo_Panorama_2.jpg" />
     <Content Include="db.sqlite3" />
-    <Content Include="requirements.txt" />
     <Content Include="app\static\app\content\bootstrap.css" />
     <Content Include="app\static\app\content\bootstrap.min.css" />
     <Content Include="app\static\app\content\site.css" />
