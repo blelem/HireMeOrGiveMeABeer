@@ -4,6 +4,8 @@ Definition of urls for DjangoWebProject.
 
 from datetime import datetime
 from django.conf.urls import patterns, url
+from django.conf import settings
+from django.conf.urls.static import static
 from app.forms import BootstrapAuthenticationForm
 
 # Uncomment the next lines to enable the admin:
@@ -40,4 +42,4 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     # url(r'^admin/', include(admin.site.urls)),
-)
+) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

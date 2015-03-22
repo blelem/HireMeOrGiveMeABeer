@@ -7,7 +7,11 @@ from django.http import HttpRequest
 from django.template import RequestContext
 from datetime import datetime
 import Alignment2D
-
+# Imports for test code, simulating saving an image to the server's media content.d
+import cv2
+import os
+from django.conf import settings
+# End of test code imports.
 def home(request):
     """Renders the home page."""
     assert isinstance(request, HttpRequest)
@@ -25,6 +29,13 @@ def contact(request):
     """Renders the contact page."""
     assert isinstance(request, HttpRequest)
 
+    #Test code, simulates saving an image to the server's media content.
+    img = cv2.imread('app/static/app/testImages/fit01.jpg', cv2.CV_LOAD_IMAGE_COLOR)
+    if not os.path.exists(settings.MEDIA_ROOT):
+		os.makedirs(settings.MEDIA_ROOT)
+    ret = cv2.imwrite('{0}{1}'.format(settings.MEDIA_ROOT, 'abracadabra.jpg'), img)
+	
+    #End of test code
     (kp1Matches, kp2Matches) = Alignment2D.SetupTheStuff()
     Transform = Alignment2D.LinearLeastSquare ( kp1Matches, kp2Matches ) 
 	#Alignment2D.Levenberg(kp1Matches, kp2Matches) 
