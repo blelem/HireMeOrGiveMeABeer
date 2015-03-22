@@ -18,6 +18,9 @@ __pycache__/
 #/env/
 /env/pip-selfcheck.json
 
+# Media files
+/media/
+
 # Auto-generated web.config
 /web.config
 
