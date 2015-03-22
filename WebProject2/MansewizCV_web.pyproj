@@ -53,13 +53,15 @@
     <Folder Include="app\templates\" />
     <Folder Include="app\templates\app\" />
     <Folder Include="DjangoWebProject\" />
+    <Folder Include="media\" />
+    <Folder Include="media\testImages\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="app\static\app\testImages\Fit01.jpg" />
-    <Content Include="app\static\app\testImages\Fit02.jpg" />
-    <Content Include="app\static\app\testImages\Fit03.jpg" />
-    <Content Include="app\static\app\testImages\Oslo_Panorama_1.jpg" />
-    <Content Include="app\static\app\testImages\Oslo_Panorama_2.jpg" />
+    <Content Include="media\testImages\Fit01.jpg" />
+    <Content Include="media\testImages\Fit02.jpg" />
+    <Content Include="media\testImages\Fit03.jpg" />
+    <Content Include="media\testImages\Oslo_Panorama_1.jpg" />
+    <Content Include="media\testImages\Oslo_Panorama_2.jpg" />
     <Content Include="db.sqlite3" />
     <Content Include="app\static\app\content\bootstrap.css" />
     <Content Include="app\static\app\content\bootstrap.min.css" />
@@ -84,7 +86,7 @@
     <Content Include="app\static\app\scripts\respond.min.js" />
     <Content Include="app\static\app\scripts\_references.js" />
     <Content Include="app\templates\app\about.html" />
-    <Content Include="app\templates\app\contact.html" />
+    <Content Include="app\templates\app\featurematch.html" />
     <Content Include="app\templates\app\index.html" />
     <Content Include="app\templates\app\layout.html" />
     <Content Include="app\templates\app\login.html" />

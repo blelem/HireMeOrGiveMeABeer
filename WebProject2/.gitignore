@@ -16,6 +16,7 @@ __pycache__/
 
 # Auto-generated virtual environment
 #/env/
+/env/pip-selfcheck.json
 
 # Auto-generated web.config
 /web.config

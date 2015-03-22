@@ -7,13 +7,10 @@ Created on Sun Feb 08 20:49:23 2015
 import numpy as np
 import cv2
     
-def SetupTheStuff():
-    """ Load images, find descriptors, match descriptors """
-    
-    # import Alignment2D
-    #  (kp1Matches, kp2Matches) = Alignment2D.SetupTheStuff()
-    img1 = cv2.imread('app/static/app/testImages/fit01.jpg', cv2.CV_LOAD_IMAGE_COLOR)
-    img2 = cv2.imread('app/static/app/testImages/Fit02.jpg', cv2.CV_LOAD_IMAGE_COLOR)
+def SetupTheStuff(img1, img2):
+    """ Find descriptors and match descriptors 
+        (kp1Matches, kp2Matches) = Alignment2D.SetupTheStuff(image1, image2) """
+
     fd = cv2.FeatureDetector_create('SIFT')
     keypoints1 = fd.detect(img1)
     keypoints2 = fd.detect(img2)
