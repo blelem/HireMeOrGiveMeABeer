@@ -34,8 +34,8 @@ def matchFeatures(request):
     assert isinstance(request, HttpRequest)
 
 
-    img1 = cv2.imread(InputImages.objects.all()[1].image_1.path,cv2.CV_LOAD_IMAGE_COLOR)
-    img2 = cv2.imread(InputImages.objects.all()[1].image_2.path,cv2.CV_LOAD_IMAGE_COLOR)
+    img1 = cv2.imread(InputImages.objects.all()[0].image_1.path,cv2.CV_LOAD_IMAGE_COLOR)
+    img2 = cv2.imread(InputImages.objects.all()[0].image_2.path,cv2.CV_LOAD_IMAGE_COLOR)
    
     (kp1Matches, kp2Matches) = Alignment2D.SetupTheStuff(img1,img2)
     Transform = Alignment2D.LinearLeastSquare(kp1Matches, kp2Matches) 
