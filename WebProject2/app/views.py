@@ -14,6 +14,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 import uuid
 import numpy as np
+from app.models import InputImages 
 
 def home(request):
     """Renders the home page."""
@@ -32,8 +33,9 @@ def matchFeatures(request):
     """Renders the contact page."""
     assert isinstance(request, HttpRequest)
 
-    img1 = cv2.imread(os.path.join(settings.MEDIA_ROOT, 'testImages/fit01.jpg'),cv2.CV_LOAD_IMAGE_COLOR)
-    img2 = cv2.imread(os.path.join(settings.MEDIA_ROOT, 'testImages/fit02.jpg'),cv2.CV_LOAD_IMAGE_COLOR)
+
+    img1 = cv2.imread(InputImages.objects.all()[1].image_1.path,cv2.CV_LOAD_IMAGE_COLOR)
+    img2 = cv2.imread(InputImages.objects.all()[1].image_2.path,cv2.CV_LOAD_IMAGE_COLOR)
    
     (kp1Matches, kp2Matches) = Alignment2D.SetupTheStuff(img1,img2)
     Transform = Alignment2D.LinearLeastSquare(kp1Matches, kp2Matches) 
