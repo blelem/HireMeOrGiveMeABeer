@@ -12,7 +12,8 @@ from app.models import InputImages
 
 import Alignment2D
 import cv2
-import osimport uuid
+import os
+import uuid
 import numpy as np
 
 def home(request):
