@@ -26,7 +26,7 @@ def SetupTheStuff(img1, img2):
     dm = cv2.DescriptorMatcher_create('BruteForce')
     matches = dm.match(desc1, desc2)
 
-    bestMatches = filter(lambda items: items.distance<50, matches)
+    bestMatches = filter(lambda items: items.distance<100, matches)
     kp1Matches = [ kp1[idx] for idx in [x.queryIdx for x in bestMatches]]
     kp2Matches = [ kp2[idx] for idx in [x.trainIdx for x in bestMatches]]
     
@@ -72,7 +72,7 @@ def LinearLeastSquare ( featuresImage1, featuresImage2 ):
 
     deltax = np.subtract( featureCoordsImage1,featureCoordsImage2 )
     for idx in range(0, np.size(featureCoordsImage1,0)-1): 
-        feature = featureCoordsImage1[idx]
+        feature = featureCoordsImage2[idx]
         J = SimilarityJacobian(feature)
         SumA = SumA + J.T.dot(J)
         SumB = SumB + J.T.dot(deltax[idx])

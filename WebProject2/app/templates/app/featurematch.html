@@ -2,7 +2,20 @@
 
 {% block content %}
 
+<div class="row">
+{% for image_set in input_image_list %}
+
+ <div class="col-xs-6 col-md-3">
+    <a href="#" class="thumbnail">
+      <img src={{ image_set.image_1.url }}>
+      <br> 
+      <img src={{ image_set.image_2.url }}>
+    </a>
+</div>
+{% endfor %}
+</div>
+
 <h2>Merged Image.</h2>
-<img src="{{ mergedImageURL }}"/>
+<img src="{{ merged_image_url }}" style="width:100%;"/>
 
 {% endblock %}
