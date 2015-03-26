@@ -33,8 +33,9 @@ def matchFeatures(request):
     """Renders the contact page."""
     assert isinstance(request, HttpRequest)
 
-    img1 = cv2.imread(InputImages.objects.all()[0].image_1.path,cv2.CV_LOAD_IMAGE_COLOR)
-    img2 = cv2.imread(InputImages.objects.all()[0].image_2.path,cv2.CV_LOAD_IMAGE_COLOR)
+    input_image_set = InputImages.objects.all()[0]
+    img1 = cv2.imread(input_image_set.image_1.path,cv2.CV_LOAD_IMAGE_COLOR)
+    img2 = cv2.imread(input_image_set.image_2.path,cv2.CV_LOAD_IMAGE_COLOR)
    
     (kp1Matches, kp2Matches) = Alignment2D.SetupTheStuff(img1,img2)
     Transform = Alignment2D.LinearLeastSquare(kp1Matches, kp2Matches) 
@@ -71,7 +72,8 @@ def matchFeatures(request):
         context_instance = RequestContext(request,
         {
             'merged_image_url': publicFilename,
-            'input_image_list' : InputImages.objects.all()
+            'input_image_list' : InputImages.objects.all(), 
+            'selected_input_image' : input_image_set
         }))
 
 def about(request):
