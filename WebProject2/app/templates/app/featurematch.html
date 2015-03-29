@@ -8,33 +8,32 @@
 <h2>Source Image Set.</h2>
 
 <div class="row">
+
   <div class="col-xs-6 col-md-3">
 	<a href="#" class="thumbnail">
-		<img src={{ selected_input_image.image_1.url }}>
+		<img data-bind="attr: { src: selectedInputImages().image_1 }">
 	</a>
   </div>
   <div class="col-xs-6 col-md-3">
 	<a href="#" class="thumbnail">
-		<img src={{ selected_input_image.image_2.url }}>
+		<img data-bind="attr: { src: selectedInputImages().image_2 }">
 	</a>
   </div>
 </div>
 
-<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#imageSelectionGrid" aria-expanded="false" aria-controls="imageSelectionGrid">
   Select a different image set
 </button>
 
 <div class="row">
-	<div class="collapse" id="collapseExample">
-	{% for image_set in input_image_list %}
-			<div class="col-xs-6 col-md-3">
-				<a href="#" class="thumbnail">
-					<img src={{ image_set.image_1.url }}>
-					<br> 
-					<img src={{ image_set.image_2.url }}>
-				</a>
-			</div>	
-	{% endfor %}
+	<div class="collapse" id="imageSelectionGrid" data-bind="foreach: availableInputImages">	
+		<div class="col-xs-6 col-md-3" data-bind="click: $parent.selectInputImages" > 
+			<a href="#" class="thumbnail">
+				<img data-bind="attr: { src: image_1 }">
+				<br> 
+				<img data-bind="attr: { src: image_2 }">
+			</a>
+		</div>	
 	</div>
 </div>
 
@@ -45,3 +44,31 @@
 <img src="{{ merged_image_url }}" style="width:100%;"/>
 
 {% endblock %}
+
+{% block scripts %}
+<script>
+
+	// KO viewmodel
+	function AppViewModel() {
+		var self = this;
+
+	    self.selectInputImages = function(inputImages) {
+             self.selectedInputImages(inputImages);
+			 $("#imageSelectionGrid").attr("class","collapse");
+        }
+
+	    self.availableInputImages = ko.observableArray([
+			{% for image_set in input_image_list %}
+				{ image_1 : "{{ image_set.image_1.url }}" ,  image_2 : "{{ image_set.image_2.url }}"  },				
+			{% endfor %}
+		]);
+	
+		self.selectedInputImages =  ko.observable(self.availableInputImages()[0]);
+	}
+
+	// Activates knockout.js
+	ko.applyBindings(new AppViewModel());
+</script>
+
+{% endblock %}
+
