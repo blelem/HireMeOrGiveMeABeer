@@ -2,46 +2,74 @@
 
 {% block content %}
 
-<!-- Image selection -->
-
-
-<h2>Source Image Set.</h2>
-
-<div class="row">
-
-  <div class="col-xs-6 col-md-3">
-	<a href="#" class="thumbnail">
-		<img data-bind="attr: { src: selectedInputImages().image_1 }">
-	</a>
-  </div>
-  <div class="col-xs-6 col-md-3">
-	<a href="#" class="thumbnail">
-		<img data-bind="attr: { src: selectedInputImages().image_2 }">
-	</a>
-  </div>
+<br />
+<div class="row" >
+   <div class="col-xs-12 col-md-10" id="MergedImage">
+      <img src="{{ merged_image_url }}" style="width:100%;"/>
+   </div>
+   <div class="col-xs-12 col-md-2">
+	   <div class="text-center">
+			<button class="btn btn-danger btn-lg" type="button" data-toggle="collapse" data-target="#imageSelectionGrid" aria-expanded="false" aria-controls="imageSelectionGrid">
+				 Merge images !
+			</button>
+	    </div>
+	   <br />
+      <div class="panel panel-primary">
+         <div class="panel-heading text-center">
+            Source Image Set
+         </div>
+         <div class="panel-body">
+            <div class="row">
+               <a href="#" class="thumbnail col-xs-6 col-md-6">
+               <img data-bind="attr: { src: selectedInputImages().image_1 }">
+               </a>
+               <a href="#" class="thumbnail col-xs-6 col-md-6">
+               <img data-bind="attr: { src: selectedInputImages().image_2 }">
+               </a>
+            </div>
+            <div class="text-center">
+               <button class="btn btn-danger btn-sm" type="button" data-toggle="modal" data-target="#imageSelectionModal">
+               Change
+               </button>
+            </div>
+         </div>
+      </div>
+      <!-- End of Image set selection panel -->
+      <div class="panel panel-primary">
+         <div class="panel-heading text-center">
+            Setting 1
+         </div>
+         <div class="panel-body">
+            A setting
+         </div>
+      </div>
+   </div>
 </div>
 
-<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#imageSelectionGrid" aria-expanded="false" aria-controls="imageSelectionGrid">
-  Select a different image set
-</button>
 
-<div class="row">
-	<div class="collapse" id="imageSelectionGrid" data-bind="foreach: availableInputImages">	
-		<div class="col-xs-6 col-md-3" data-bind="click: $parent.selectInputImages" > 
-			<a href="#" class="thumbnail">
-				<img data-bind="attr: { src: image_1 }">
-				<br> 
-				<img data-bind="attr: { src: image_2 }">
-			</a>
-		</div>	
-	</div>
+<div class="modal fade" id="imageSelectionModal" tabindex="-1" role="dialog" aria-labelledby="imageSelectionModalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Select image set</h4>
+         </div>
+         <div class="modal-body">
+            <div class="row">
+               <div data-bind="foreach: availableInputImages">
+                  <div class="col-xs-6 col-md-3" data-bind="click: $parent.selectInputImages" > 
+                     <a href="#" class="thumbnail">
+                     <img data-bind="attr: { src: image_1 }">
+                     <br> 
+                     <img data-bind="attr: { src: image_2 }">
+                     </a>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
 </div>
-
-
-<!-- Image selection -->
-
-<h2>Merged Image.</h2>
-<img src="{{ merged_image_url }}" style="width:100%;"/>
 
 {% endblock %}
 
