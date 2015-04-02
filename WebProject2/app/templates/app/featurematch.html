@@ -9,7 +9,7 @@
    </div>
    <div class="col-xs-12 col-md-2">
 	   <div class="text-center">
-			<button class="btn btn-danger btn-lg" type="button" data-toggle="collapse" data-target="#imageSelectionGrid" aria-expanded="false" aria-controls="imageSelectionGrid">
+			<button class="btn btn-danger btn-lg" type="button" onclick="DoMerge()">
 				 Merge images !
 			</button>
 	    </div>
@@ -67,6 +67,9 @@
                </div>
             </div>
          </div>
+		 <div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+      </div>
       </div>
    </div>
 </div>
@@ -75,6 +78,17 @@
 
 {% block scripts %}
 <script>
+
+	function DoMerge() {
+		jsonData = { 
+			selectedInputImages : viewModel.selectedInputImages().pk,
+			somethingElse       : 'Whaaat?'
+		}
+		$.get("/matchFeatures/merge", jsonData, function(returnedData) {
+			// This callback is executed if the post was successful     
+		})
+	}
+
 
 	// KO viewmodel
 	function AppViewModel() {
@@ -87,7 +101,9 @@
 
 	    self.availableInputImages = ko.observableArray([
 			{% for image_set in input_image_list %}
-				{ image_1 : "{{ image_set.image_1.url }}" ,  image_2 : "{{ image_set.image_2.url }}"  },				
+				{ image_1 : "{{ image_set.image_1.url }}" , 
+				  image_2 : "{{ image_set.image_2.url }}" ,		
+				  pk	  : "{{ image_set.pk }}"  },		
 			{% endfor %}
 		]);
 	
@@ -95,7 +111,8 @@
 	}
 
 	// Activates knockout.js
-	ko.applyBindings(new AppViewModel());
+	viewModel = new AppViewModel();
+	ko.applyBindings(viewModel);
 </script>
 
 {% endblock %}

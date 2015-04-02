@@ -17,6 +17,7 @@ urlpatterns = patterns('',
     # Examples:
     url(r'^$', 'app.views.home', name='home'),
     url(r'^matchFeatures$', 'app.views.matchFeatures', name='matchFeatures'),
+    url(r'^matchFeatures/merge$', 'app.views.merge', name='merge'),
     url(r'^about', 'app.views.about', name='about'),
     url(r'^login/$',
         'django.contrib.auth.views.login',

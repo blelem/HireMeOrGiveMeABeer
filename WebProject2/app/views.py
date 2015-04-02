@@ -29,13 +29,26 @@ def home(request):
         })
     )
 
-def matchFeatures(request):
-    """Renders the contact page."""
+def merge(request):
     assert isinstance(request, HttpRequest)
+    filePk = request.GET['selectedInputImages']
 
-    input_image_set = InputImages.objects.all()[0]
-    img1 = cv2.imread(input_image_set.image_1.path,cv2.CV_LOAD_IMAGE_COLOR)
-    img2 = cv2.imread(input_image_set.image_2.path,cv2.CV_LOAD_IMAGE_COLOR)
+    file = InputImages.objects.get(pk=filePk)
+    img1 = cv2.imread(file.image_1.path, cv2.CV_LOAD_IMAGE_COLOR)
+    img2 = cv2.imread(file.image_2.path, cv2.CV_LOAD_IMAGE_COLOR)
+   
+    Canvas1 = mergeImages(img1, img2)
+    
+    # Save the resulting image
+    if not os.path.exists(settings.MEDIA_ROOT):
+	    os.makedirs(settings.MEDIA_ROOT)
+
+    filename = "%s.%s" % (uuid.uuid4(), 'jpg')
+    ret = cv2.imwrite(os.path.join(settings.MEDIA_ROOT, filename), Canvas1)
+    publicFilename = os.path.join(settings.MEDIA_URL, filename)
+
+    
+def mergeImages(img1, img2):
    
     (kp1Matches, kp2Matches) = Alignment2D.SetupTheStuff(img1,img2)
     Transform = Alignment2D.LinearLeastSquare(kp1Matches, kp2Matches) 
@@ -59,6 +72,21 @@ def matchFeatures(request):
     beta = (1.0 - alpha)
     cv2.addWeighted(Canvas1, alpha, Canvas2, beta, 0.0, Canvas1)
 
+    return Canvas1
+
+
+
+    
+
+def matchFeatures(request):
+    """Renders the contact page."""
+    assert isinstance(request, HttpRequest)
+
+    input_image_set = InputImages.objects.all()[0]
+    img1 = cv2.imread(input_image_set.image_1.path,cv2.CV_LOAD_IMAGE_COLOR)
+    img2 = cv2.imread(input_image_set.image_2.path,cv2.CV_LOAD_IMAGE_COLOR)
+   
+    Canvas1 = mergeImages(img1,img2)
     # Save the resulting image
     if not os.path.exists(settings.MEDIA_ROOT):
 	    os.makedirs(settings.MEDIA_ROOT)
