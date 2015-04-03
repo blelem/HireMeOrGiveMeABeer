@@ -18,7 +18,7 @@
    </div>
    <div class="col-xs-12 col-md-2">
 	   <div class="text-center">
-			<button class="btn btn-danger btn-lg" type="button" onclick="DoMerge()">
+			<button class="btn btn-danger btn-md" type="button" onclick="DoMerge()">
 				 Merge images !
 			</button>
 	    </div>
@@ -97,6 +97,8 @@
             $zoomRange: $(".zoom-range"),
             $reset: $(".reset")
           });
+	$(".zoom-in").click( function() {$('.panzoom').panzoom("enable");});
+	$('.panzoom').panzoom("disable");
          
     
 	function DoMerge() {
