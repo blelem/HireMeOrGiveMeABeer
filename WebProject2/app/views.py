@@ -7,6 +7,7 @@ from django.http import HttpRequest
 from django.template import RequestContext
 from django.conf import settings
 from django.conf.urls.static import static
+from django.http import JsonResponse
 from datetime import datetime
 from app.models import InputImages 
 
@@ -46,6 +47,8 @@ def merge(request):
     filename = "%s.%s" % (uuid.uuid4(), 'jpg')
     ret = cv2.imwrite(os.path.join(settings.MEDIA_ROOT, filename), Canvas1)
     publicFilename = os.path.join(settings.MEDIA_URL, filename)
+    response = JsonResponse({'mergedImageUrl': publicFilename})
+    return response
 
     
 def mergeImages(img1, img2):
@@ -75,25 +78,12 @@ def mergeImages(img1, img2):
     return Canvas1
 
 
-
-    
-
 def matchFeatures(request):
     """Renders the contact page."""
     assert isinstance(request, HttpRequest)
 
-    input_image_set = InputImages.objects.all()[0]
-    img1 = cv2.imread(input_image_set.image_1.path,cv2.CV_LOAD_IMAGE_COLOR)
-    img2 = cv2.imread(input_image_set.image_2.path,cv2.CV_LOAD_IMAGE_COLOR)
-   
-    Canvas1 = mergeImages(img1,img2)
-    # Save the resulting image
-    if not os.path.exists(settings.MEDIA_ROOT):
-	    os.makedirs(settings.MEDIA_ROOT)
-
-    filename = "%s.%s" % (uuid.uuid4(), 'jpg')
-    ret = cv2.imwrite(os.path.join(settings.MEDIA_ROOT, filename), Canvas1)
-    publicFilename = os.path.join(settings.MEDIA_URL, filename)
+    input_image_set = InputImages.objects.get(set_name='DefaultFit')
+    publicFilename = os.path.join(settings.MEDIA_URL, 'testImages/FitReferenceResult.jpg')
 
     return render(request,
         'app/featurematch.html',

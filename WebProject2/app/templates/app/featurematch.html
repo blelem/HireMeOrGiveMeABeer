@@ -1,11 +1,20 @@
 {% extends "app/layout.html" %}
-
+{% load staticfiles%}
 {% block content %}
 
 <br />
 <div class="row" >
-   <div class="col-xs-12 col-md-10" id="MergedImage">
-      <img src="{{ merged_image_url }}" style="width:100%;"/>
+   <div class="col-xs-12 col-md-10 " id="MergedImage">
+      <div class="buttons">
+        <button class="zoom-in">Zoom In</button>
+        <button class="zoom-out">Zoom Out</button>
+        <button class="reset">Reset</button>
+      </div>
+      <div class="parent">
+         <div class="panzoom">
+           <img data-bind="attr: { src: mergedImageUrl() }" style="width:100%;"/>
+         </div>
+	   </div>
    </div>
    <div class="col-xs-12 col-md-2">
 	   <div class="text-center">
@@ -77,15 +86,26 @@
 {% endblock %}
 
 {% block scripts %}
+
+<script src="{% static 'app/scripts/jquery.panzoom.min.js' %}"></script>
+
 <script>
 
+     $('.panzoom').panzoom({
+            $zoomIn: $(".zoom-in"),
+            $zoomOut: $(".zoom-out"),
+            $zoomRange: $(".zoom-range"),
+            $reset: $(".reset")
+          });
+         
+    
 	function DoMerge() {
 		jsonData = { 
 			selectedInputImages : viewModel.selectedInputImages().pk,
 			somethingElse       : 'Whaaat?'
 		}
 		$.get("/matchFeatures/merge", jsonData, function(returnedData) {
-			// This callback is executed if the post was successful     
+			viewModel.mergedImageUrl(returnedData.mergedImageUrl);    
 		})
 	}
 
@@ -108,6 +128,7 @@
 		]);
 	
 		self.selectedInputImages =  ko.observable(self.availableInputImages()[0]);
+		self.mergedImageUrl = ko.observable("{{ merged_image_url }}")
 	}
 
 	// Activates knockout.js
