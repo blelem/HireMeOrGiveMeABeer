@@ -89,7 +89,7 @@ def matchFeatures(request):
     publicFilename = os.path.join(settings.MEDIA_URL, 'testImages/FitReferenceResult.jpg')
     
     return render(request,
-        'app/featurematch.html',
+        'app/featurematchcontrols.html',
         context_instance = RequestContext(request,
         {
             'merged_image_url': publicFilename,

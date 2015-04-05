@@ -58,7 +58,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app\static\app\scripts\knockout-3.3.0.js" />
-    <Content Include="app\templates\app\TextFile1.txt" />
+    <Content Include="app\templates\app\featurematchcontrols.html" />
+    <Content Include="app\templates\app\selectcontrol.html" />
+    <Content Include="app\templates\app\selectviewmodel.html" />
     <Content Include="media\testImages\Fit01.jpg" />
     <Content Include="media\testImages\Fit02.jpg" />
     <Content Include="media\testImages\Fit03.jpg" />

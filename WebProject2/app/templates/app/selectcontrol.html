@@ -1,0 +1,15 @@
+﻿{% comment %} 
+   Creates the HTML code for a select component.
+   Inputs : 
+     - name		   : The name of the js viewmodel variables to bind.
+     - displayName : Display name of the UI component. 
+{% endcomment %}
+
+ <div class="panel panel-primary">
+         <div class="panel-heading text-center">
+            {{displayName}}
+         </div>
+         <div class="panel-body">
+			 <select data-bind="options: {{name}}Options , optionsText:'description', value: {{name}}Selected"></select>
+         </div>
+ </div>

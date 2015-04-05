@@ -1,0 +1,11 @@
+﻿{% extends "app/featurematch.html" %}
+
+{% block controls %}
+      {% include "app/selectcontrol.html" with name="alignMethod" displayName="Feature match" %}
+      {% include "app/selectcontrol.html" with name="jacobian" displayName="Jacobian" %}
+{% endblock %}
+
+{% block controlsViewmodel %}
+		{% include "app/selectviewmodel.html" with name="alignMethod" dict=align_method_list %}
+		{% include "app/selectviewmodel.html" with name="jacobian" dict=jacobian_list %}
+{% endblock %}
