@@ -31,6 +31,12 @@ def SetupTheStuff(img1, img2):
     kp2Matches = [ kp2[idx] for idx in [x.trainIdx for x in bestMatches]]
     
     return kp1Matches, kp2Matches
+
+def JacobiansList():
+   return dict ( [(  'similarity',  { 'description': 'similarity', 'jacobianFct' : SimilarityJacobian, 'transformFct': SimilarityTransform }),
+                  (  'homography',  { 'description': 'homography'}),
+                 ])
+
     
 def SimilarityJacobian (feature):
     """ Return the Jacobian for the Similarity transform"""
@@ -57,6 +63,10 @@ def SimilarityTransform (parameters):
     return T
                          
 
+def AlignMethodList():
+   return dict ( [(  'levenberg',  { 'description': 'levenberg', 'function' : Levenberg}),
+                  (  'lls',        { 'description': 'LLS' ,      'function' : LinearLeastSquare })
+                 ])
 
 def LinearLeastSquare ( featuresImage1, featuresImage2 ):
     """2D Alignment using Linear Least Square. """

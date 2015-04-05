@@ -33,12 +33,15 @@ def home(request):
 def merge(request):
     assert isinstance(request, HttpRequest)
     filePk = request.GET['selectedInputImages']
+    selectedAlignMethod = request.GET['selectedAlignMethod']
 
     file = InputImages.objects.get(pk=filePk)
     img1 = cv2.imread(file.image_1.path, cv2.CV_LOAD_IMAGE_COLOR)
     img2 = cv2.imread(file.image_2.path, cv2.CV_LOAD_IMAGE_COLOR)
    
-    Canvas1 = mergeImages(img1, img2)
+    alignMethod = Alignment2D.AlignMethodList()[selectedAlignMethod]['function']
+
+    Canvas1 = mergeImages(img1, img2,alignMethod)
     
     # Save the resulting image
     if not os.path.exists(settings.MEDIA_ROOT):
@@ -51,11 +54,11 @@ def merge(request):
     return response
 
     
-def mergeImages(img1, img2):
+def mergeImages(img1, img2, alignMethod):
    
     (kp1Matches, kp2Matches) = Alignment2D.SetupTheStuff(img1,img2)
-    Transform = Alignment2D.LinearLeastSquare(kp1Matches, kp2Matches) 
-    #Transform = Alignment2D.Levenberg(kp1Matches, kp2Matches) 
+  
+    Transform =alignMethod(kp1Matches, kp2Matches) 
 
     #Overlay the two images, showing the detected feature.
     rows,cols,colours = img1.shape
@@ -84,14 +87,16 @@ def matchFeatures(request):
 
     input_image_set = InputImages.objects.get(set_name='DefaultFit')
     publicFilename = os.path.join(settings.MEDIA_URL, 'testImages/FitReferenceResult.jpg')
-
+    
     return render(request,
         'app/featurematch.html',
         context_instance = RequestContext(request,
         {
             'merged_image_url': publicFilename,
             'input_image_list' : InputImages.objects.all(), 
-            'selected_input_image' : input_image_set
+            'selected_input_image' : input_image_set,
+            'align_method_list' :  Alignment2D.AlignMethodList (),
+            'jacobian_list'     :  Alignment2D.JacobiansList ()
         }))
 
 def about(request):

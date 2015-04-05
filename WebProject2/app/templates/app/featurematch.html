@@ -43,15 +43,26 @@
             </div>
          </div>
       </div>
-      <!-- End of Image set selection panel -->
+
       <div class="panel panel-primary">
          <div class="panel-heading text-center">
-            Setting 1
+            Feature Match
          </div>
          <div class="panel-body">
-            A setting
+			 <select data-bind="options: alignMethodOptions , optionsText:'description', value: selectedAlignMethod"></select>
          </div>
       </div>
+
+	  <div class="panel panel-primary">
+         <div class="panel-heading text-center">
+            Jacobian
+         </div>
+         <div class="panel-body">
+			 <select data-bind="options: jacobianOptions , optionsText:'description', value: selectedJacobianMethod"></select>
+         </div>
+      </div>
+
+
    </div>
 </div>
 
@@ -104,8 +115,9 @@
 	function DoMerge() {
 		jsonData = { 
 			selectedInputImages : viewModel.selectedInputImages().pk,
-			somethingElse       : 'Whaaat?'
+			selectedAlignMethod : viewModel.selectedAlignMethod().id
 		}
+
 		$.get("/matchFeatures/merge", jsonData, function(returnedData) {
 			viewModel.mergedImageUrl(returnedData.mergedImageUrl);    
 		})
@@ -128,8 +140,25 @@
 				  pk	  : "{{ image_set.pk }}"  },		
 			{% endfor %}
 		]);
-	
 		self.selectedInputImages =  ko.observable(self.availableInputImages()[0]);
+	
+		self.alignMethodOptions = ko.observableArray([
+			{% for key, values in align_method_list.items %} 
+				{ id	      : "{{ key }}" , 
+				  description : "{{ values.description }}" },	
+			{% endfor %}
+		]);
+		self.selectedAlignMethod = ko.observable(self.alignMethodOptions()[0]);
+
+		self.jacobianOptions = ko.observableArray([
+			{% for key, values in jacobian_list.items %} 
+				{ id	      : "{{ key }}" , 
+				  description : "{{ values.description }}" },	
+			{% endfor %}
+		]);
+		self.selectedJacobianMethod = ko.observable(self.jacobianOptions()[0]);
+
+
 		self.mergedImageUrl = ko.observable("{{ merged_image_url }}")
 	}
 
