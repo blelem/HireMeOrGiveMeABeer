@@ -32,14 +32,14 @@ def home(request):
 
 def merge(request):
     assert isinstance(request, HttpRequest)
-    filePk = request.GET['selectedInputImages']
-    selectedAlignMethod = request.GET['selectedAlignMethod']
+    filePk = request.GET['inputImagesSelected']
+    alignMethodSelected = request.GET['alignMethodSelected']
 
     file = InputImages.objects.get(pk=filePk)
     img1 = cv2.imread(file.image_1.path, cv2.CV_LOAD_IMAGE_COLOR)
     img2 = cv2.imread(file.image_2.path, cv2.CV_LOAD_IMAGE_COLOR)
    
-    alignMethod = Alignment2D.AlignMethodList()[selectedAlignMethod]['function']
+    alignMethod = Alignment2D.AlignMethodList()[alignMethodSelected]['function']
 
     Canvas1 = mergeImages(img1, img2,alignMethod)
     
@@ -95,8 +95,8 @@ def matchFeatures(request):
             'merged_image_url': publicFilename,
             'input_image_list' : InputImages.objects.all(), 
             'selected_input_image' : input_image_set,
-            'align_method_list' :  Alignment2D.AlignMethodList (),
-            'jacobian_list'     :  Alignment2D.JacobiansList ()
+            'align_method_list' :  Alignment2D.AlignMethodList(),
+            'jacobian_list'     :  Alignment2D.JacobiansList()
         }))
 
 def about(request):

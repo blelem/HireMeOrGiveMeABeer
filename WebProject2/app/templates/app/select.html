@@ -1,0 +1,16 @@
+{% comment %} 
+   Creates the js code for a select component.
+   Inputs : 
+     - name : The name of the js variables.
+     - dict : A dictionnary of the items to populate the select. Each item has a 'key' and a 'description'
+  
+{% endcomment %}
+
+		self.{{ name }}Options = ko.observableArray([
+			{% for key, values in dict.items %}
+				{ id	      : "{{ key }}" ,
+				  description : "{{ values.description }}" },
+			{% endfor %}
+		]);
+		self.{{ name }}Selected = ko.observable(self.{{ name }}Options()[0]);
+		self.jsonData.push ( function() { return { '{{ name }}Selected' : viewModel.{{ name }}Selected().id }});

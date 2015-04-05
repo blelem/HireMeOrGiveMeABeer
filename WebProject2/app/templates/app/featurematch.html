@@ -49,7 +49,7 @@
             Feature Match
          </div>
          <div class="panel-body">
-			 <select data-bind="options: alignMethodOptions , optionsText:'description', value: selectedAlignMethod"></select>
+			 <select data-bind="options: alignMethodOptions , optionsText:'description', value: alignMethodSelected"></select>
          </div>
       </div>
 
@@ -58,7 +58,7 @@
             Jacobian
          </div>
          <div class="panel-body">
-			 <select data-bind="options: jacobianOptions , optionsText:'description', value: selectedJacobianMethod"></select>
+			 <select data-bind="options: jacobianOptions , optionsText:'description', value: jacobianSelected"></select>
          </div>
       </div>
 
@@ -113,10 +113,8 @@
          
     
 	function DoMerge() {
-		jsonData = { 
-			selectedInputImages : viewModel.selectedInputImages().pk,
-			selectedAlignMethod : viewModel.selectedAlignMethod().id
-		}
+		var jsonData = { inputImagesSelected : viewModel.selectedInputImages().pk };
+		viewModel.jsonData.forEach( function(elem) { $.extend( jsonData, elem() ) });
 
 		$.get("/matchFeatures/merge", jsonData, function(returnedData) {
 			viewModel.mergedImageUrl(returnedData.mergedImageUrl);    
@@ -127,7 +125,8 @@
 	// KO viewmodel
 	function AppViewModel() {
 		var self = this;
-
+		self.jsonData = [];
+		
 	    self.selectInputImages = function(inputImages) {
              self.selectedInputImages(inputImages);
 			 $("#imageSelectionGrid").attr("class","collapse");
@@ -141,23 +140,9 @@
 			{% endfor %}
 		]);
 		self.selectedInputImages =  ko.observable(self.availableInputImages()[0]);
-	
-		self.alignMethodOptions = ko.observableArray([
-			{% for key, values in align_method_list.items %} 
-				{ id	      : "{{ key }}" , 
-				  description : "{{ values.description }}" },	
-			{% endfor %}
-		]);
-		self.selectedAlignMethod = ko.observable(self.alignMethodOptions()[0]);
-
-		self.jacobianOptions = ko.observableArray([
-			{% for key, values in jacobian_list.items %} 
-				{ id	      : "{{ key }}" , 
-				  description : "{{ values.description }}" },	
-			{% endfor %}
-		]);
-		self.selectedJacobianMethod = ko.observable(self.jacobianOptions()[0]);
-
+		
+		{% include "app/select.html" with name="alignMethod" dict=align_method_list %}
+		{% include "app/select.html" with name="jacobian" dict=jacobian_list %}
 
 		self.mergedImageUrl = ko.observable("{{ merged_image_url }}")
 	}
