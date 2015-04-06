@@ -63,10 +63,21 @@ def SimilarityTransform (parameters):
     return T
                          
 
+__LEVENBERG__ = 'levenberg'
+__LLS__ = 'lls'
+
 def AlignMethodList():
-   return dict ( [(  'levenberg',  { 'description': 'levenberg', 'function' : Levenberg}),
-                  (  'lls',        { 'description': 'LLS' ,      'function' : LinearLeastSquare })
+   return dict ( [(  __LEVENBERG__,  { 'description': 'levenberg'}),
+                  (  __LLS__,        { 'description': 'LLS' })
                  ])
+
+def AlignImages( featuresImage1, featuresImage2, method):
+    if method==__LEVENBERG__:
+        return Levenberg(featuresImage1, featuresImage2)
+    elif method==__LLS__:
+        return LinearLeastSquare(featuresImage1, featuresImage2)
+    else:
+        raise NameError('Unsupported method')
 
 def LinearLeastSquare ( featuresImage1, featuresImage2 ):
     """2D Alignment using Linear Least Square. """

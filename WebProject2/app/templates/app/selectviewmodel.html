@@ -14,4 +14,4 @@
 			{% endfor %}
 		]);
 		self.{{ content.jsonName }}Selected = ko.observable(self.{{ content.jsonName }}Options()[0]);
-		self.jsonData.push ( function() { return { '{{ content.jsonName }}Selected' : viewModel.{{ content.jsonName }}Selected().id }});
+		self.jsonData.push ( function() { return { '{{ content.jsonName }}' : viewModel.{{ content.jsonName }}Selected().id }});

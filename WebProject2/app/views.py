@@ -33,15 +33,14 @@ def home(request):
 def merge(request):
     assert isinstance(request, HttpRequest)
     filePk = request.GET['inputImagesSelected']
-    alignMethodSelected = request.GET[alignMethodParams()['jsonName']+'Selected']
+    alignMethodSelected = request.GET[alignMethodParams()['jsonName']]
+    jacobianSelected    = request.GET[jacobianParams()['jsonName']]
 
     file = InputImages.objects.get(pk=filePk)
     img1 = cv2.imread(file.image_1.path, cv2.CV_LOAD_IMAGE_COLOR)
     img2 = cv2.imread(file.image_2.path, cv2.CV_LOAD_IMAGE_COLOR)
-   
-    alignMethod = Alignment2D.AlignMethodList()[alignMethodSelected]['function']
 
-    Canvas1 = mergeImages(img1, img2,alignMethod)
+    Canvas1 = mergeImages(img1, img2,alignMethodSelected)
     
     # Save the resulting image
     if not os.path.exists(settings.MEDIA_ROOT):
@@ -58,7 +57,7 @@ def mergeImages(img1, img2, alignMethod):
    
     (kp1Matches, kp2Matches) = Alignment2D.SetupTheStuff(img1,img2)
   
-    Transform =alignMethod(kp1Matches, kp2Matches) 
+    Transform =  Alignment2D.AlignImages(kp1Matches, kp2Matches, alignMethod) 
 
     #Overlay the two images, showing the detected feature.
     rows,cols,colours = img1.shape
