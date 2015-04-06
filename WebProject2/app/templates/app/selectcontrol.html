@@ -1,7 +1,10 @@
 ﻿{% comment %} 
    Creates the HTML code for a select component.
    Inputs : 
-     - name		   : The name of the js viewmodel variables to bind.
+     - content    : An object, with the parameters:
+                        "jsonName" : The name of the parameter to be used in the REST calls. 
+						"dict"     : A dictionnary containing the items to populate the select. 
+                                     Each item has a 'key' and a 'description'
      - displayName : Display name of the UI component. 
 {% endcomment %}
 
@@ -10,6 +13,6 @@
             {{displayName}}
          </div>
          <div class="panel-body">
-			 <select data-bind="options: {{name}}Options , optionsText:'description', value: {{name}}Selected"></select>
+			 <select data-bind="options: {{content.jsonName}}Options , optionsText:'description', value: {{content.jsonName}}Selected"></select>
          </div>
  </div>
