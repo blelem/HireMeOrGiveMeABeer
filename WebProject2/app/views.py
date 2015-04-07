@@ -40,7 +40,7 @@ def merge(request):
     img1 = cv2.imread(file.image_1.path, cv2.CV_LOAD_IMAGE_COLOR)
     img2 = cv2.imread(file.image_2.path, cv2.CV_LOAD_IMAGE_COLOR)
 
-    Canvas1 = mergeImages(img1, img2,alignMethodSelected)
+    Canvas1 = mergeImages(img1, img2,alignMethodSelected, jacobianSelected)
     
     # Save the resulting image
     if not os.path.exists(settings.MEDIA_ROOT):
@@ -53,11 +53,11 @@ def merge(request):
     return response
 
     
-def mergeImages(img1, img2, alignMethod):
+def mergeImages(img1, img2, alignMethod, jacobian):
    
     (kp1Matches, kp2Matches) = Alignment2D.SetupTheStuff(img1,img2)
   
-    Transform =  Alignment2D.AlignImages(kp1Matches, kp2Matches, alignMethod) 
+    Transform =  Alignment2D.AlignImages(kp1Matches, kp2Matches, alignMethod, jacobian) 
 
     #Overlay the two images, showing the detected feature.
     rows,cols,colours = img1.shape

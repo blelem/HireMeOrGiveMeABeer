@@ -32,9 +32,15 @@ def SetupTheStuff(img1, img2):
     
     return kp1Matches, kp2Matches
 
+
+__SIMILARITYJACOBIAN__ = 'similarity'
+__HOMOGRAPHYJACOBIAN__ = 'homograpy'
+__TRANSLATIONJACOBIAN__ = 'translation'
+
 def JacobiansList():
-   return dict ( [(  'similarity',  { 'description': 'similarity', 'jacobianFct' : SimilarityJacobian, 'transformFct': SimilarityTransform }),
-                  (  'homography',  { 'description': 'homography'}),
+   return dict ( [(  __SIMILARITYJACOBIAN__,  { 'description': 'similarity'}),
+                  (  __HOMOGRAPHYJACOBIAN__,  { 'description': 'homography'}),
+                  (  __TRANSLATIONJACOBIAN__, { 'description': 'translation'}),
                  ])
 
     
@@ -63,6 +69,32 @@ def SimilarityTransform (parameters):
     return T
                          
 
+def TranslationJacobian (feature):
+    """ Return the Jacobian for the translation transform"""
+
+    if feature is None:
+        #Typically used to get the size of the Jacobian
+        return (np.float32([ [0,0],
+                             [0,0]] ))
+                     
+    J = np.float32([ [1,0],
+                     [0,1]] )
+    return J
+        
+def TranslationTransform (parameters):
+    """ Return the translation transform 
+        parameters: (tx,ty )"""
+
+    if parameters is None:
+        parameters = (0,0,0,0)
+        
+    (tx, ty) = list(parameters)
+    T = np.float32([ [ 1, 0, tx],
+                     [ 0, 1, ty]] )
+    return T
+                         
+
+
 __LEVENBERG__ = 'levenberg'
 __LLS__ = 'lls'
 
@@ -71,15 +103,25 @@ def AlignMethodList():
                   (  __LLS__,        { 'description': 'LLS' })
                  ])
 
-def AlignImages( featuresImage1, featuresImage2, method):
+def AlignImages( featuresImage1, featuresImage2, method, jacobian):
+
+    if jacobian ==__SIMILARITYJACOBIAN__:
+        jacobianFct = SimilarityJacobian
+        transformFct = SimilarityTransform
+    elif jacobian ==__TRANSLATIONJACOBIAN__:
+        jacobianFct =  TranslationJacobian
+        transformFct = TranslationTransform
+    else:
+        raise NameError('Unsupported jacobian')
+
     if method==__LEVENBERG__:
-        return Levenberg(featuresImage1, featuresImage2)
+        return Levenberg(featuresImage1, featuresImage2, jacobianFct, transformFct)
     elif method==__LLS__:
-        return LinearLeastSquare(featuresImage1, featuresImage2)
+        return LinearLeastSquare(featuresImage1, featuresImage2, jacobianFct, transformFct)
     else:
         raise NameError('Unsupported method')
 
-def LinearLeastSquare ( featuresImage1, featuresImage2 ):
+def LinearLeastSquare ( featuresImage1, featuresImage2 , jacobianFct, transformFct):
     """2D Alignment using Linear Least Square. """
 
     #Format the input vector 
@@ -87,24 +129,24 @@ def LinearLeastSquare ( featuresImage1, featuresImage2 ):
     featureCoordsImage2 = [kp.pt for kp in featuresImage2] 
 
     #Initalize Sums to zero.
-    J = SimilarityJacobian(None)  # Returns an empty null Jacobian of the right shape.
+    J = jacobianFct(None)  # Returns an empty null Jacobian of the right shape.
     SumA = J.T.dot(J)
     SumB = J.T.dot(np.array([0, 0]))
 
     deltax = np.subtract( featureCoordsImage1,featureCoordsImage2 )
     for idx in range(0, np.size(featureCoordsImage1,0)-1): 
         feature = featureCoordsImage2[idx]
-        J = SimilarityJacobian(feature)
+        J = jacobianFct(feature)
         SumA = SumA + J.T.dot(J)
         SumB = SumB + J.T.dot(deltax[idx])
     
     EstimatedParameters = np.linalg.solve(SumA,SumB)
-    Transform = SimilarityTransform(EstimatedParameters)
+    Transform = transformFct(EstimatedParameters)
 
     return Transform;
 
 
-def Levenberg( featuresImage1, featuresImage2 ):
+def Levenberg( featuresImage1, featuresImage2 , jacobianFct, transformFct):
     # Solve the system via the Iterative algorithm (Levenberg-)
 
     #Format the input vector 
@@ -112,11 +154,11 @@ def Levenberg( featuresImage1, featuresImage2 ):
     featureCoordsImage2 = [np.array(kp.pt) for kp in featuresImage1] 
 
     #Initalize Sums to zero.
-    J = SimilarityJacobian(None)  # Returns an empty null Jacobian of the right shape.
+    J = jacobianFct(None)  # Returns an empty null Jacobian of the right shape.
     ParamsCount = J.shape[1]
     
     EstimatedParameters = np.zeros(ParamsCount);
-    Transform = SimilarityTransform(EstimatedParameters)
+    Transform = transformFct(EstimatedParameters)
 
     #Iterate
     for iteration in range(0,10): # Do 10 iterations, or until the residual is small enough. 
@@ -128,13 +170,13 @@ def Levenberg( featuresImage1, featuresImage2 ):
             measured = featureCoordsImage2[idx].T 
         
             residual =  measured - Transform.dot( reference )
-            J = SimilarityJacobian(measured)
+            J = jacobianFct(measured)
             SumA = SumA + J.T.dot(J)
             SumB = SumB.T + J.T.dot(residual)
 
         deltap = np.linalg.solve(SumA,SumB)
         EstimatedParameters = EstimatedParameters + np.asarray(deltap)
-        Transform = SimilarityTransform(EstimatedParameters)
+        Transform = transformFct(EstimatedParameters)
     
     return Transform;
     
