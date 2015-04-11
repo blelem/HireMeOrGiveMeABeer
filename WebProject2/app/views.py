@@ -65,13 +65,13 @@ def mergeImages(img1, img2, alignMethod, jacobian):
     Canvas2 = np.copy(Canvas1)
 
     finalRows, finalCols, colours = Canvas1.shape
-    M = np.float32([[1,0,0],[0,1,0]])
+    M = np.float32([[1,0,0],[0,1,0],[0,0,1]])
 
     img3 = cv2.drawKeypoints(img1, kp1Matches,color=(0,0,255))
-    cv2.warpAffine(img3, M,(finalCols, finalRows), Canvas1)
+    cv2.warpPerspective(img3, M,(finalCols, finalRows), Canvas1)
 
     img2 = cv2.drawKeypoints(img2, kp2Matches,color=(255,0,0))
-    cv2.warpAffine(img2, Transform,(finalCols, finalRows), Canvas2, borderMode=cv2.BORDER_TRANSPARENT)
+    cv2.warpPerspective(img2, Transform,(finalCols, finalRows), Canvas2, borderMode=cv2.BORDER_TRANSPARENT)
 
     alpha = 0.5
     beta = (1.0 - alpha)

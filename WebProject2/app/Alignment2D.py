@@ -44,7 +44,7 @@ def JacobiansList():
                  ])
 
     
-def SimilarityJacobian (feature):
+def SimilarityJacobian (feature, parameters = None):
     """ Return the Jacobian for the Similarity transform"""
 
     if feature is None:
@@ -65,11 +65,41 @@ def SimilarityTransform (parameters):
         
     (tx, ty, a, b) = list(parameters)
     T = np.float32([ [ 1+a, -b,  tx],
-                     [ b,   1+a, ty]] )
+                     [ b,   1+a, ty],
+                     [ 0,    0,  1 ] ] )
     return T
                          
+def HomographyJacobian (feature, parameters = None):
+    """ Return the Jacobian for the Homography transform"""
 
-def TranslationJacobian (feature):
+    if feature is None:
+        #Typically used to get the size of the Jacobian
+        return (np.float32([ [0,0,0,0,0,0,0,0],
+                             [0,0,0,0,0,0,0,0]] ))
+    (x, y) = list(feature)
+    (h00, h01, h02, h10, h11, h12, h20, h21) = list(parameters)
+    xprime = (1 + h00)*x + h01*y + h02
+    yprime = h10*x + (1 + h11)*y + h12
+    D = h20*x + h21*y + 1
+
+    J = np.float32([ [x, y, 1, 0, 0, 0, -xprime*x/D, -xprime*y/D],
+                     [0, 0, 0, x, y, 1, -yprime*x/D, -yprime*y/D]] ) /D;
+    return J
+        
+def HomographyTransform(parameters):
+    """ Return the Homography transform 
+        parameters: (h00, h01, h02, h10, h11, h12, h20, h21 )"""
+
+    if parameters is None:
+        parameters = (0,0,0,0,0,0,0,0)
+        
+    (h00, h01, h02, h10, h11, h12, h20, h21) = list(parameters)
+    T = np.float32([ [ h00, h01, h02],
+                     [ h10, h11, h12],
+                     [ h20, h21, 1] ] )
+    return T
+
+def TranslationJacobian (feature, parameters = None):
     """ Return the Jacobian for the translation transform"""
 
     if feature is None:
@@ -90,7 +120,8 @@ def TranslationTransform (parameters):
         
     (tx, ty) = list(parameters)
     T = np.float32([ [ 1, 0, tx],
-                     [ 0, 1, ty]] )
+                     [ 0, 1, ty],
+                     [ 0, 0, 1 ] ])
     return T
                          
 
@@ -111,6 +142,9 @@ def AlignImages( featuresImage1, featuresImage2, method, jacobian):
     elif jacobian ==__TRANSLATIONJACOBIAN__:
         jacobianFct =  TranslationJacobian
         transformFct = TranslationTransform
+    elif jacobian == __HOMOGRAPHYJACOBIAN__:
+        jacobianFct = HomographyJacobian
+        transformFct = HomographyTransform
     else:
         raise NameError('Unsupported jacobian')
 
@@ -169,8 +203,10 @@ def Levenberg( featuresImage1, featuresImage2 , jacobianFct, transformFct):
             reference =  featureCoordsImage1[idx].T
             measured = featureCoordsImage2[idx].T 
         
-            residual =  measured - Transform.dot( reference )
-            J = jacobianFct(measured)
+            estimated = Transform.dot( reference )
+            estimated = estimated[0:2] / estimated[2] #Back to inhomogenous coords
+            residual =  measured - estimated
+            J = jacobianFct(measured, EstimatedParameters)
             SumA = SumA + J.T.dot(J)
             SumB = SumB.T + J.T.dot(residual)
 
