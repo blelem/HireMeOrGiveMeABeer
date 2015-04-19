@@ -6,6 +6,9 @@ Created on Sun Feb 08 20:49:23 2015
 """
 import numpy as np
 import cv2
+import Similarity
+import Translation
+import Homography
     
 def SetupTheStuff(img1, img2):
     """ Find descriptors and match descriptors 
@@ -34,7 +37,7 @@ def SetupTheStuff(img1, img2):
 
 
 __SIMILARITYJACOBIAN__ = 'similarity'
-__HOMOGRAPHYJACOBIAN__ = 'homograpy'
+__HOMOGRAPHYJACOBIAN__ = 'homography'
 __TRANSLATIONJACOBIAN__ = 'translation'
 
 def JacobiansList():
@@ -42,88 +45,6 @@ def JacobiansList():
                   (  __HOMOGRAPHYJACOBIAN__,  { 'description': 'homography'}),
                   (  __TRANSLATIONJACOBIAN__, { 'description': 'translation'}),
                  ])
-
-    
-def SimilarityJacobian (feature, parameters = None):
-    """ Return the Jacobian for the Similarity transform"""
-
-    if feature is None:
-        #Typically used to get the size of the Jacobian
-        return (np.float32([ [0,0,0,0],
-                             [0,0,0,0]] ))
-                     
-    J = np.float32([ [1,0,feature[0], -feature[1]],
-                     [0,1,feature[1], feature[0]]] )
-    return J
-        
-def SimilarityTransform (parameters):
-    """ Return the Similarity transform 
-        parameters: (tx,ty,a,b )"""
-
-    if parameters is None:
-        parameters = (0,0,0,0)
-        
-    (tx, ty, a, b) = list(parameters)
-    T = np.float32([ [ 1+a, -b,  tx],
-                     [ b,   1+a, ty],
-                     [ 0,    0,  1 ] ] )
-    return T
-                         
-def HomographyJacobian (feature, parameters = None):
-    """ Return the Jacobian for the Homography transform"""
-
-    if feature is None:
-        #Typically used to get the size of the Jacobian
-        return (np.float32([ [0,0,0,0,0,0,0,0],
-                             [0,0,0,0,0,0,0,0]] ))
-    (x, y) = list(feature)
-    (h00, h01, h02, h10, h11, h12, h20, h21) = list(parameters)
-    xprime = (1 + h00)*x + h01*y + h02
-    yprime = h10*x + (1 + h11)*y + h12
-    D = h20*x + h21*y + 1
-
-    J = np.float32([ [x, y, 1, 0, 0, 0, -xprime*x/D, -xprime*y/D],
-                     [0, 0, 0, x, y, 1, -yprime*x/D, -yprime*y/D]] ) /D;
-    return J
-        
-def HomographyTransform(parameters):
-    """ Return the Homography transform 
-        parameters: (h00, h01, h02, h10, h11, h12, h20, h21 )"""
-
-    if parameters is None:
-        parameters = (0,0,0,0,0,0,0,0)
-        
-    (h00, h01, h02, h10, h11, h12, h20, h21) = list(parameters)
-    T = np.float32([ [ h00, h01, h02],
-                     [ h10, h11, h12],
-                     [ h20, h21, 1] ] )
-    return T
-
-def TranslationJacobian (feature, parameters = None):
-    """ Return the Jacobian for the translation transform"""
-
-    if feature is None:
-        #Typically used to get the size of the Jacobian
-        return (np.float32([ [0,0],
-                             [0,0]] ))
-                     
-    J = np.float32([ [1,0],
-                     [0,1]] )
-    return J
-        
-def TranslationTransform (parameters):
-    """ Return the translation transform 
-        parameters: (tx,ty )"""
-
-    if parameters is None:
-        parameters = (0,0,0,0)
-        
-    (tx, ty) = list(parameters)
-    T = np.float32([ [ 1, 0, tx],
-                     [ 0, 1, ty],
-                     [ 0, 0, 1 ] ])
-    return T
-                         
 
 
 __LEVENBERG__ = 'levenberg'
@@ -137,39 +58,57 @@ def AlignMethodList():
 def AlignImages( featuresImage1, featuresImage2, method, jacobian):
 
     if jacobian ==__SIMILARITYJACOBIAN__:
-        jacobianFct = SimilarityJacobian
-        transformFct = SimilarityTransform
+        jacobianFct = Similarity.SimilarityJacobian
+        transformFct = Similarity.SimilarityTransform
+        initialEstimateFct = Similarity.SimilarityInitialEstimate
     elif jacobian ==__TRANSLATIONJACOBIAN__:
-        jacobianFct =  TranslationJacobian
-        transformFct = TranslationTransform
+        jacobianFct =  Translation.TranslationJacobian
+        transformFct = Translation.TranslationTransform
+        initialEstimateFct = Translation.TranslationInitialEstimate
     elif jacobian == __HOMOGRAPHYJACOBIAN__:
-        jacobianFct = HomographyJacobian
-        transformFct = HomographyTransform
+        jacobianFct = Homography.HomographyJacobian
+        transformFct = Homography.HomographyTransform
+        initialEstimateFct = Homography.HomographyInitialEstimate
     else:
         raise NameError('Unsupported jacobian')
 
     if method==__LEVENBERG__:
-        return Levenberg(featuresImage1, featuresImage2, jacobianFct, transformFct)
+        return Levenberg(featuresImage1, featuresImage2, jacobianFct, transformFct, initialEstimateFct)
     elif method==__LLS__:
         return LinearLeastSquare(featuresImage1, featuresImage2, jacobianFct, transformFct)
     else:
         raise NameError('Unsupported method')
 
+def residualError( featuresImage1, featuresImage2, Transform):
+    """Compute the residual error after Image2 is transformed to match Image1"""
+          
+    residualError = 0.0;
+    for idx in range(0, np.size(featuresImage1,0)-1): 
+        image1 =  featuresImage1[idx].T
+        image2 = featuresImage2[idx].T 
+        
+        estimated = Transform.dot( image2 )
+        estimated = estimated[0:2] / estimated[2] #Back to inhomogenous Cords
+        residual =  image1[0:2] - estimated
+        residualError = residualError + residual.T.dot(residual)
+
+    return residualError
+
 def LinearLeastSquare ( featuresImage1, featuresImage2 , jacobianFct, transformFct):
     """2D Alignment using Linear Least Square. """
 
     #Format the input vector 
-    featureCoordsImage1 = [kp.pt for kp in featuresImage1] 
-    featureCoordsImage2 = [kp.pt for kp in featuresImage2] 
+    featuresCordsImage1 = [np.hstack((kp.pt, 1.0)) for kp in featuresImage1] 
+    featuresCordsImage2 = [np.hstack((kp.pt, 1.0)) for kp in featuresImage2] 
 
     #Initalize Sums to zero.
     J = jacobianFct(None)  # Returns an empty null Jacobian of the right shape.
     SumA = J.T.dot(J)
     SumB = J.T.dot(np.array([0, 0]))
 
-    deltax = np.subtract( featureCoordsImage1,featureCoordsImage2 )
-    for idx in range(0, np.size(featureCoordsImage1,0)-1): 
-        feature = featureCoordsImage2[idx]
+    deltax = np.subtract( featuresCordsImage1,featuresCordsImage2 )[:, 0:2]
+    for idx in range(0, np.size(featuresCordsImage1,0)-1): 
+        feature = featuresCordsImage2[idx]
         J = jacobianFct(feature)
         SumA = SumA + J.T.dot(J)
         SumB = SumB + J.T.dot(deltax[idx])
@@ -177,42 +116,68 @@ def LinearLeastSquare ( featuresImage1, featuresImage2 , jacobianFct, transformF
     EstimatedParameters = np.linalg.solve(SumA,SumB)
     Transform = transformFct(EstimatedParameters)
 
+    error = residualError( featuresCordsImage1, featuresCordsImage2, Transform)
+    print 'error = {0}'.format(str(error))
     return Transform;
 
 
-def Levenberg( featuresImage1, featuresImage2 , jacobianFct, transformFct):
+def Levenberg( featuresImage1, featuresImage2 , jacobianFct, transformFct, initialEstimateFct):
     # Solve the system via the Iterative algorithm (Levenberg-)
 
     #Format the input vector 
-    featureCoordsImage1 = [np.hstack((kp.pt, 1.0)) for kp in featuresImage2] # Homogeneous coordinates
-    featureCoordsImage2 = [np.array(kp.pt) for kp in featuresImage1] 
+    featuresCordsImage1 = [np.hstack((kp.pt, 1.0)) for kp in featuresImage1] # Homogeneous Cordinates
+    featuresCordsImage2 = [np.hstack((kp.pt, 1.0)) for kp in featuresImage2] 
 
     #Initalize Sums to zero.
     J = jacobianFct(None)  # Returns an empty null Jacobian of the right shape.
     ParamsCount = J.shape[1]
     
-    EstimatedParameters = np.zeros(ParamsCount);
+    EstimatedParameters = initialEstimateFct(featuresCordsImage1, featuresCordsImage2)
+
     Transform = transformFct(EstimatedParameters)
 
+    oldResidualError = float("inf")
+    lambda_ = -1
+
     #Iterate
-    for iteration in range(0,10): # Do 10 iterations, or until the residual is small enough. 
+    for iteration in range(0,25): # Do 10 iterations. 
         
         SumA = np.zeros( (ParamsCount, ParamsCount) )
         SumB = np.zeros(ParamsCount);
-        for idx in range(0, np.size(featureCoordsImage1,0)-1): 
-            reference =  featureCoordsImage1[idx].T
-            measured = featureCoordsImage2[idx].T 
+      
+        for idx in range(0, np.size(featuresCordsImage1,0)-1): 
+            image1 =  featuresCordsImage1[idx].T
+            image2 = featuresCordsImage2[idx].T 
         
-            estimated = Transform.dot( reference )
-            estimated = estimated[0:2] / estimated[2] #Back to inhomogenous coords
-            residual =  measured - estimated
-            J = jacobianFct(measured, EstimatedParameters)
+            estimated = Transform.dot( image2 )
+            estimated = estimated[0:2] / estimated[2] #Back to inhomogenous cords
+            residual =  image1[0:2] - estimated
+            J = jacobianFct(image1, EstimatedParameters)
             SumA = SumA + J.T.dot(J)
-            SumB = SumB.T + J.T.dot(residual)
+            SumB = SumB + J.T.dot(residual)
+        
+            
+        if (lambda_ == -1):
+           lambda_ = np.mean(np.diag(SumA)) * 0.000001
 
+        SumA = SumA + (np.identity(ParamsCount) * lambda_)
         deltap = np.linalg.solve(SumA,SumB)
-        EstimatedParameters = EstimatedParameters + np.asarray(deltap)
+        EstimatedParameters = EstimatedParameters + deltap
         Transform = transformFct(EstimatedParameters)
-    
+
+        # Make sure we're converging.
+        error = residualError( featuresCordsImage1, featuresCordsImage2, Transform)
+
+        print 'Iteration {0} : error = {1} lambda= {2}'.format( str(iteration),str(error), str(  lambda_) )
+
+        if (error > oldResidualError) : #We're not converging
+            lambda_ = lambda_ * 10.0
+            EstimatedParameters =  oldEstimatedParameters 
+            Transform = transformFct(EstimatedParameters)
+        else :                          #We're converging
+            lambda_ = lambda_ / 10.0    
+            oldResidualError = error
+            oldEstimatedParameters = EstimatedParameters 
+            
     return Transform;
     
