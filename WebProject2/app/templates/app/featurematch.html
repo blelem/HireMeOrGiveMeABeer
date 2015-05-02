@@ -1,9 +1,14 @@
 {% extends "app/layout.html" %}
 {% load staticfiles%}
+{% block stylesheets%}
+    <link rel="stylesheet" type="text/css" href="{% static 'app/content/bootstrap-slider.min.css' %}" />
+{% endblock %}
 {% block content %}
 
 <br />
+
 <div class="row" >
+
    <div class="col-xs-12 col-md-10 " id="MergedImage">
       <div class="buttons">
         <button class="zoom-in">Zoom In</button>
@@ -16,14 +21,14 @@
          </div>
 	   </div>
    </div>
-   <div class="col-xs-12 col-md-2">
+   <div class="col-xs-12 col-md-2 controlPanel">
 	   <div class="text-center">
 			<button class="btn btn-danger btn-md" type="button" onclick="DoMerge()">
 				 Merge images !
 			</button>
 	    </div>
 	   <br />
-      <div class="panel panel-primary">
+      <div class="panel panel-primary controlPanelItem">
          <div class="panel-heading text-center">
             Source Image Set
          </div>
@@ -83,6 +88,7 @@
 {% block scripts %}
 
 <script src="{% static 'app/scripts/jquery.panzoom.min.js' %}"></script>
+<script src="{% static 'app/scripts/bootstrap-slider.min.js' %}"></script>
 
 <script>
 
@@ -94,7 +100,13 @@
           });
 	$(".zoom-in").click( function() {$('.panzoom').panzoom("enable");});
 	$('.panzoom').panzoom("disable");
-         
+
+    $('#ex1').slider({
+    	formatter: function(value) {
+    		return 'Current value: ' + value;
+    	}
+    });
+    $('#ex1Slider').css('width', '100%');
     
 	function DoMerge() {
 		var jsonData = { inputImagesSelected : viewModel.selectedInputImages().pk };

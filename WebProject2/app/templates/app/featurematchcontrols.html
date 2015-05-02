@@ -1,7 +1,8 @@
 ﻿{% extends "app/featurematch.html" %}
 
 {% block controls %}
-      {% include "app/selectcontrol.html" with content=align_method_list displayName="Feature match" %}
+      {% include "app/slidercontrol.html" with content=align_method_list displayName="Match Threshold" %}
+      {% include "app/selectcontrol.html" with content=align_method_list displayName="Transform Estimation" %}
       {% include "app/selectcontrol.html" with content=jacobian_list     displayName="Jacobian" %}
 {% endblock %}
 

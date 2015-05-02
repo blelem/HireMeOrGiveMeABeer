@@ -40,3 +40,18 @@ input[type="checkbox"].input-validation-error {
 .validation-summary-valid {
     display: none;
 }
+
+.control-select {
+     max-width: 280px;
+     width:100%;
+}
+
+.controlPanelItem {
+     line-height: 1;
+     margin-bottom:0px;
+}
+
+.controlPanel{
+     line-height: 0.5;
+}
+
