@@ -101,12 +101,7 @@
 	$(".zoom-in").click( function() {$('.panzoom').panzoom("enable");});
 	$('.panzoom').panzoom("disable");
 
-    $('#ex1').slider({
-    	formatter: function(value) {
-    		return 'Current value: ' + value;
-    	}
-    });
-    $('#ex1Slider').css('width', '100%');
+
     
 	function DoMerge() {
 		var jsonData = { inputImagesSelected : viewModel.selectedInputImages().pk };
@@ -145,6 +140,12 @@
 	// Activates knockout.js
 	viewModel = new AppViewModel();
 	ko.applyBindings(viewModel);
+    $('#ex1').slider({
+    	formatter: function(value) {
+    		return 'Current value: ' + value;
+    	}
+    });
+    $('#ex1Slider').css('width', '100%');
 </script>
 
 {% endblock %}

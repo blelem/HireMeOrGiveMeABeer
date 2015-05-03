@@ -68,6 +68,7 @@
     <Content Include="app\templates\app\selectcontrol.html" />
     <Content Include="app\templates\app\selectviewmodel.html" />
     <Content Include="app\templates\app\sliderControl.html" />
+    <Content Include="app\templates\app\sliderviewmodel.html" />
     <Content Include="media\testImages\Fit01.jpg" />
     <Content Include="media\testImages\Fit02.jpg" />
     <Content Include="media\testImages\Fit03.jpg" />

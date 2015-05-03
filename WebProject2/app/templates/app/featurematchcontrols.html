@@ -1,12 +1,13 @@
 ﻿{% extends "app/featurematch.html" %}
 
 {% block controls %}
-      {% include "app/slidercontrol.html" with content=align_method_list displayName="Match Threshold" %}
-      {% include "app/selectcontrol.html" with content=align_method_list displayName="Transform Estimation" %}
+      {% include "app/slidercontrol.html" with content=match_threshold displayName="Match Threshold" %}
+      {% include "app/selectcontrol.html" with content=align_method_list displayName="Alignment Algo" %}
       {% include "app/selectcontrol.html" with content=jacobian_list     displayName="Jacobian" %}
 {% endblock %}
 
 {% block controlsViewmodel %}
+		{% include "app/sliderviewmodel.html" with content=match_threshold %}
 		{% include "app/selectviewmodel.html" with content=align_method_list %}
 		{% include "app/selectviewmodel.html" with content=jacobian_list %}
 {% endblock %}

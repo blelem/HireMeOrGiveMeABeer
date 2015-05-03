@@ -81,7 +81,7 @@ def mergeImages(img1, img2, alignMethod, jacobian):
 
 
 def matchFeatures(request):
-    """Renders the contact page."""
+    """Renders the page."""
     assert isinstance(request, HttpRequest)
 
     input_image_set = InputImages.objects.get(set_name='DefaultFit')
@@ -95,7 +95,12 @@ def matchFeatures(request):
             'input_image_list' : InputImages.objects.all(), 
             'selected_input_image' : input_image_set,
             'align_method_list' :  alignMethodParams(),
-            'jacobian_list'     :  jacobianParams()
+            'jacobian_list'     :  jacobianParams(),
+            'match_threshold'   :  { 
+               'jsonName' : 'MatchThreshold',
+               'min' : 10,
+               'max' : 25
+             }
         }))
 
 def about(request):
