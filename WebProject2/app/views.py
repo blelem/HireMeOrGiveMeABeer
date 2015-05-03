@@ -86,21 +86,39 @@ def matchFeatures(request):
 
     input_image_set = InputImages.objects.get(set_name='DefaultFit')
     publicFilename = os.path.join(settings.MEDIA_URL, 'testImages/FitReferenceResult.jpg')
+
+    controlPanels = list( [
+        { 'panelTemplate'  : 'app/Panels/selectPanel.js', 
+          'displayName'    : 'Alignment Algo', 
+          'panelId'        : 'AlignmentAlgoPanel',
+          'content'        : alignMethodParams() },
+
+        { 'panelTemplate'  : 'app/Panels/selectPanel.js', 
+          'displayName'    : 'Jacobian', 
+          'panelId'        : 'JacobianPanel',
+          'content'        : jacobianParams()    },
+
+        { 'panelTemplate'  : 'app/Panels/sliderPanel.js', 
+          'displayName'    : 'Match Threshold', 
+          'panelId'        : 'MatchThresholdPanel',
+          'content'        : { 
+               'jsonName' : 'MatchThreshold',
+               'min'     : 10,
+               'max'     : 25,
+               'default' : 15
+             }   }
+         ] ); 
+    
+
     
     return render(request,
-        'app/featurematchcontrols.html',
+        'app/featurematch.html',
         context_instance = RequestContext(request,
         {
             'merged_image_url': publicFilename,
             'input_image_list' : InputImages.objects.all(), 
             'selected_input_image' : input_image_set,
-            'align_method_list' :  alignMethodParams(),
-            'jacobian_list'     :  jacobianParams(),
-            'match_threshold'   :  { 
-               'jsonName' : 'MatchThreshold',
-               'min' : 10,
-               'max' : 25
-             }
+            'control_panels'   :  controlPanels
         }))
 
 def about(request):

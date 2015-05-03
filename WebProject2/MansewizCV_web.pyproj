@@ -55,6 +55,7 @@
     <Folder Include="app\static\app\scripts\" />
     <Folder Include="app\templates\" />
     <Folder Include="app\templates\app\" />
+    <Folder Include="app\templates\app\Panels\" />
     <Folder Include="DjangoWebProject\" />
     <Folder Include="media\" />
     <Folder Include="media\testImages\" />
@@ -64,11 +65,10 @@
     <Content Include="app\static\app\content\bootstrap-slider.min.css" />
     <Content Include="app\static\app\scripts\bootstrap-slider.min.js" />
     <Content Include="app\static\app\scripts\knockout-3.3.0.js" />
-    <Content Include="app\templates\app\featurematchcontrols.html" />
-    <Content Include="app\templates\app\selectcontrol.html" />
-    <Content Include="app\templates\app\selectviewmodel.html" />
-    <Content Include="app\templates\app\sliderControl.html" />
-    <Content Include="app\templates\app\sliderviewmodel.html" />
+    <Content Include="app\templates\app\Panels\selectPanelTemplate.html" />
+    <Content Include="app\templates\app\Panels\selectPanel.js" />
+    <Content Include="app\templates\app\Panels\sliderPanel.js" />
+    <Content Include="app\templates\app\Panels\sliderPanelTemplate.html" />
     <Content Include="media\testImages\Fit01.jpg" />
     <Content Include="media\testImages\Fit02.jpg" />
     <Content Include="media\testImages\Fit03.jpg" />

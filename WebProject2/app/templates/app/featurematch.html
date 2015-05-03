@@ -49,8 +49,11 @@
          </div>
       </div>
 
-	 {% block controls %}{% endblock %}
-
+     {% for panel in control_panels %}
+        {%if panel.panelId %}
+             <div id="{{panel.panelId}}"></div>
+        {% endif %}
+     {% endfor %}
 
    </div>
 </div>
@@ -132,7 +135,11 @@
 		]);
 		self.selectedInputImages =  ko.observable(self.availableInputImages()[0]);
 		
-	    {% block controlsViewmodel %}{% endblock %}
+	    {% for panel in control_panels %}
+           {%if panel.panelTemplate %}
+                {% include panel.panelTemplate with panel=panel %}
+           {% endif %}
+        {% endfor %}
 
 		self.mergedImageUrl = ko.observable("{{ merged_image_url }}")
 	}
@@ -140,12 +147,7 @@
 	// Activates knockout.js
 	viewModel = new AppViewModel();
 	ko.applyBindings(viewModel);
-    $('#ex1').slider({
-    	formatter: function(value) {
-    		return 'Current value: ' + value;
-    	}
-    });
-    $('#ex1Slider').css('width', '100%');
+
 </script>
 
 {% endblock %}
