@@ -31,14 +31,10 @@ controlPanels = list( [
           'content'        :  Alignment2D.JacobiansList()   },
 
         { 'panelTemplate'  : 'app/Panels/sliderPanel.js', 
-          'displayName'    : 'Match Threshold', 
-          'panelId'        : 'MatchThresholdPanel',
-          'jsonName'       : 'MatchThreshold',
-          'content'        : { 
-               'min'     : 10,
-               'max'     : 25,
-               'default' : 15
-             }   }
+          'displayName'    : 'Max distance', 
+          'panelId'        : 'MaxDistancePanel',
+          'jsonName'       : 'MaxDistance',
+          'content'        : Alignment2D.MaxDistanceRange()  }
          ] ); 
 
 def home(request):
@@ -75,9 +71,9 @@ def merge(request):
     return response
 
     
-def mergeImages(img1, img2, AlignMethod = '', Jacobian = '', **kwargs):
+def mergeImages(img1, img2, AlignMethod = '', Jacobian = '', MaxDistance ='', **kwargs):
    
-    (kp1Matches, kp2Matches) = Alignment2D.SetupTheStuff(img1,img2)
+    (kp1Matches, kp2Matches) = Alignment2D.ExtractFeatures(img1, img2, MaxDistance)
   
     Transform =  Alignment2D.AlignImages(kp1Matches, kp2Matches, AlignMethod, Jacobian) 
 

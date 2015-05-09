@@ -10,30 +10,10 @@ import Similarity
 import Translation
 import Homography
     
-def SetupTheStuff(img1, img2):
-    """ Find descriptors and match descriptors 
-        (kp1Matches, kp2Matches) = Alignment2D.SetupTheStuff(image1, image2) """
-
-    fd = cv2.FeatureDetector_create('SIFT')
-    keypoints1 = fd.detect(img1)
-    keypoints2 = fd.detect(img2)
-
-    maxfeatures = 100;
-    keypoints1 = sorted(keypoints1, key=lambda pts: pts.size,reverse=True)[0:maxfeatures]
-    keypoints2 = sorted(keypoints2, key=lambda pts: pts.size,reverse=True)[0:maxfeatures]
-
-    de = cv2.DescriptorExtractor_create('SIFT')
-    (kp1, desc1) = de.compute(img1, keypoints1)
-    (kp2, desc2) = de.compute(img2, keypoints2)
-
-    dm = cv2.DescriptorMatcher_create('BruteForce')
-    matches = dm.match(desc1, desc2)
-
-    bestMatches = filter(lambda items: items.distance<100, matches)
-    kp1Matches = [ kp1[idx] for idx in [x.queryIdx for x in bestMatches]]
-    kp2Matches = [ kp2[idx] for idx in [x.trainIdx for x in bestMatches]]
-    
-    return kp1Matches, kp2Matches
+def MaxDistanceRange():
+    return  { 'min'     : 100,
+              'max'     : 999,
+              'default' : 100 }
 
 
 __SIMILARITYJACOBIAN__ = 'similarity'
@@ -54,6 +34,32 @@ def AlignMethodList():
    return dict ( [(  __LEVENBERG__,  { 'description': 'levenberg'}),
                   (  __LLS__,        { 'description': 'LLS' })
                  ])
+
+
+def ExtractFeatures(img1, img2, MaxDistance=100):
+    """ Find descriptors and match descriptors 
+        (kp1Matches, kp2Matches) = Alignment2D.SetupTheStuff(image1, image2) """
+
+    fd = cv2.FeatureDetector_create('SIFT')
+    keypoints1 = fd.detect(img1)
+    keypoints2 = fd.detect(img2)
+
+    maxfeatures = 100;
+    keypoints1 = sorted(keypoints1, key=lambda pts: pts.size,reverse=True)[0:maxfeatures]
+    keypoints2 = sorted(keypoints2, key=lambda pts: pts.size,reverse=True)[0:maxfeatures]
+
+    de = cv2.DescriptorExtractor_create('SIFT')
+    (kp1, desc1) = de.compute(img1, keypoints1)
+    (kp2, desc2) = de.compute(img2, keypoints2)
+
+    dm = cv2.DescriptorMatcher_create('BruteForce')
+    matches = dm.match(desc1, desc2)
+
+    bestMatches = filter(lambda items: items.distance<float(MaxDistance), matches)
+    kp1Matches = [ kp1[idx] for idx in [x.queryIdx for x in bestMatches]]
+    kp2Matches = [ kp2[idx] for idx in [x.trainIdx for x in bestMatches]]
+    
+    return kp1Matches, kp2Matches
 
 def AlignImages( featuresImage1, featuresImage2, method, jacobian):
 
