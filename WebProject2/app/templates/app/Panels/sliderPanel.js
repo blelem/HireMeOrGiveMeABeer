@@ -2,8 +2,9 @@
 Creates the HTML code for a slider component.
     Inputs : 
      - panel : 
-          "panelId"      : Unique Id
+           "panelId"     : Unique Id
            "displayName" : The title of the panel       
+           "jsonName"    : The name of the parameter to be used in the REST calls. 
            "content"     : Content of the paenel
               "min"      : The min value of the slider
               "max"      : The max value of the slider
@@ -28,6 +29,6 @@ $('#{{panel.panelId}}SliderId').css('width', '100%');
 
 // Callback that returns the selected value
 self.jsonData.push ( function() { 
-    return { '{{ panel.content.jsonName }}' : self.{{panel.panelId}}.slider('getValue') }
+    return { '{{ panel.jsonName }}' : self.{{panel.panelId}}.slider('getValue') }
 });
 

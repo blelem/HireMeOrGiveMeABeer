@@ -17,6 +17,30 @@ import os
 import uuid
 import numpy as np
 
+controlPanels = list( [
+        { 'panelTemplate'  : 'app/Panels/selectPanel.js', 
+          'displayName'    : 'Alignment Algo', 
+          'panelId'        : 'AlignmentAlgoPanel',
+          'jsonName'       :  'AlignMethod',
+          'content'        :  Alignment2D.AlignMethodList() },
+
+        { 'panelTemplate'  : 'app/Panels/selectPanel.js', 
+          'displayName'    : 'Jacobian', 
+          'panelId'        : 'JacobianPanel',
+          'jsonName'       :  'Jacobian',
+          'content'        :  Alignment2D.JacobiansList()   },
+
+        { 'panelTemplate'  : 'app/Panels/sliderPanel.js', 
+          'displayName'    : 'Match Threshold', 
+          'panelId'        : 'MatchThresholdPanel',
+          'jsonName'       : 'MatchThreshold',
+          'content'        : { 
+               'min'     : 10,
+               'max'     : 25,
+               'default' : 15
+             }   }
+         ] ); 
+
 def home(request):
     """Renders the home page."""
     assert isinstance(request, HttpRequest)
@@ -33,14 +57,12 @@ def home(request):
 def merge(request):
     assert isinstance(request, HttpRequest)
     filePk = request.GET['inputImagesSelected']
-    alignMethodSelected = request.GET[alignMethodParams()['jsonName']]
-    jacobianSelected    = request.GET[jacobianParams()['jsonName']]
 
     file = InputImages.objects.get(pk=filePk)
     img1 = cv2.imread(file.image_1.path, cv2.CV_LOAD_IMAGE_COLOR)
     img2 = cv2.imread(file.image_2.path, cv2.CV_LOAD_IMAGE_COLOR)
 
-    Canvas1 = mergeImages(img1, img2,alignMethodSelected, jacobianSelected)
+    Canvas1 = mergeImages(img1, img2, **request.GET.dict())
     
     # Save the resulting image
     if not os.path.exists(settings.MEDIA_ROOT):
@@ -53,11 +75,11 @@ def merge(request):
     return response
 
     
-def mergeImages(img1, img2, alignMethod, jacobian):
+def mergeImages(img1, img2, AlignMethod = '', Jacobian = '', **kwargs):
    
     (kp1Matches, kp2Matches) = Alignment2D.SetupTheStuff(img1,img2)
   
-    Transform =  Alignment2D.AlignImages(kp1Matches, kp2Matches, alignMethod, jacobian) 
+    Transform =  Alignment2D.AlignImages(kp1Matches, kp2Matches, AlignMethod, Jacobian) 
 
     #Overlay the two images, showing the detected feature.
     rows,cols,colours = img1.shape
@@ -87,30 +109,6 @@ def matchFeatures(request):
     input_image_set = InputImages.objects.get(set_name='DefaultFit')
     publicFilename = os.path.join(settings.MEDIA_URL, 'testImages/FitReferenceResult.jpg')
 
-    controlPanels = list( [
-        { 'panelTemplate'  : 'app/Panels/selectPanel.js', 
-          'displayName'    : 'Alignment Algo', 
-          'panelId'        : 'AlignmentAlgoPanel',
-          'content'        : alignMethodParams() },
-
-        { 'panelTemplate'  : 'app/Panels/selectPanel.js', 
-          'displayName'    : 'Jacobian', 
-          'panelId'        : 'JacobianPanel',
-          'content'        : jacobianParams()    },
-
-        { 'panelTemplate'  : 'app/Panels/sliderPanel.js', 
-          'displayName'    : 'Match Threshold', 
-          'panelId'        : 'MatchThresholdPanel',
-          'content'        : { 
-               'jsonName' : 'MatchThreshold',
-               'min'     : 10,
-               'max'     : 25,
-               'default' : 15
-             }   }
-         ] ); 
-    
-
-    
     return render(request,
         'app/featurematch.html',
         context_instance = RequestContext(request,
@@ -134,15 +132,3 @@ def about(request):
             'year':datetime.now().year,
         }))
 
-
-def alignMethodParams():
-    params = {};
-    params['dict'] = Alignment2D.AlignMethodList();
-    params['jsonName'] = "alignMethod";
-    return params
-
-def jacobianParams():
-    params = {};
-    params['dict'] = Alignment2D.JacobiansList();
-    params['jsonName']= "jacobian";
-    return params
