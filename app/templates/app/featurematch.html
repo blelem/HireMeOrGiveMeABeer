@@ -1,0 +1,154 @@
+{% extends "app/layout.html" %}
+{% load staticfiles%}
+{% block stylesheets%}
+    <link rel="stylesheet" type="text/css" href="{% static 'app/content/bootstrap-slider.min.css' %}" />
+{% endblock %}
+{% block content %}
+
+<br />
+
+<div class="row" >
+
+   <div class="col-xs-12 col-md-10 " id="MergedImage">
+      <div class="buttons">
+        <button class="zoom-in">Zoom In</button>
+        <button class="zoom-out">Zoom Out</button>
+        <button class="reset">Reset</button>
+      </div>
+      <div class="parent">
+         <div class="panzoom">
+           <img data-bind="attr: { src: mergedImageUrl() }" style="width:100%;"/>
+         </div>
+	   </div>
+   </div>
+   <div class="col-xs-12 col-md-2 controlPanel">
+	   <div class="text-center">
+			<button class="btn btn-danger btn-md" type="button" onclick="DoMerge()">
+				 Merge images !
+			</button>
+	    </div>
+	   <br />
+      <div class="panel panel-primary controlPanelItem">
+         <div class="panel-heading text-center">
+            Source Image Set
+         </div>
+         <div class="panel-body">
+            <div class="row">
+               <a href="#" class="thumbnail col-xs-6 col-md-6">
+               <img data-bind="attr: { src: selectedInputImages().image_1 }">
+               </a>
+               <a href="#" class="thumbnail col-xs-6 col-md-6">
+               <img data-bind="attr: { src: selectedInputImages().image_2 }">
+               </a>
+            </div>
+            <div class="text-center">
+               <button class="btn btn-danger btn-sm" type="button" data-toggle="modal" data-target="#imageSelectionModal">
+               Change
+               </button>
+            </div>
+         </div>
+      </div>
+
+     {% for panel in control_panels %}
+        {%if panel.panelId %}
+             <div id="{{panel.panelId}}"></div>
+        {% endif %}
+     {% endfor %}
+
+   </div>
+</div>
+
+
+<div class="modal fade" id="imageSelectionModal" tabindex="-1" role="dialog" aria-labelledby="imageSelectionModalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Select image set</h4>
+         </div>
+         <div class="modal-body">
+            <div class="row">
+               <div data-bind="foreach: availableInputImages">
+                  <div class="col-xs-6 col-md-3" data-bind="click: $parent.selectInputImages" > 
+                     <a href="#" class="thumbnail">
+                     <img data-bind="attr: { src: image_1 }">
+                     <br> 
+                     <img data-bind="attr: { src: image_2 }">
+                     </a>
+                  </div>
+               </div>
+            </div>
+         </div>
+		 <div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+      </div>
+      </div>
+   </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script src="{% static 'app/scripts/jquery.panzoom.min.js' %}"></script>
+<script src="{% static 'app/scripts/bootstrap-slider.min.js' %}"></script>
+
+<script>
+
+     $('.panzoom').panzoom({
+            $zoomIn: $(".zoom-in"),
+            $zoomOut: $(".zoom-out"),
+            $zoomRange: $(".zoom-range"),
+            $reset: $(".reset")
+          });
+	$(".zoom-in").click( function() {$('.panzoom').panzoom("enable");});
+	$('.panzoom').panzoom("disable");
+
+
+    
+	function DoMerge() {
+		var jsonData = { inputImagesSelected : viewModel.selectedInputImages().pk };
+		viewModel.jsonData.forEach( function(elem) { $.extend( jsonData, elem() ) });
+
+		$.get("/matchFeatures/merge", jsonData, function(returnedData) {
+			viewModel.mergedImageUrl(returnedData.mergedImageUrl);    
+		})
+	}
+
+
+	// KO viewmodel
+	function AppViewModel() {
+		var self = this;
+		self.jsonData = [];
+		
+	    self.selectInputImages = function(inputImages) {
+             self.selectedInputImages(inputImages);
+			 $("#imageSelectionGrid").attr("class","collapse");
+        }
+
+	    self.availableInputImages = ko.observableArray([
+			{% for image_set in input_image_list %}
+				{ image_1 : "{{ image_set.image_1.url }}" , 
+				  image_2 : "{{ image_set.image_2.url }}" ,		
+				  pk	  : "{{ image_set.pk }}"  },		
+			{% endfor %}
+		]);
+		self.selectedInputImages =  ko.observable(self.availableInputImages()[0]);
+		
+	    {% for panel in control_panels %}
+           {%if panel.panelTemplate %}
+                {% include panel.panelTemplate with panel=panel %}
+           {% endif %}
+        {% endfor %}
+
+		self.mergedImageUrl = ko.observable("{{ merged_image_url }}")
+	}
+
+	// Activates knockout.js
+	viewModel = new AppViewModel();
+	ko.applyBindings(viewModel);
+
+</script>
+
+{% endblock %}
+
