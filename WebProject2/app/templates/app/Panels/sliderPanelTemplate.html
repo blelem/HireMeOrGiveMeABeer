@@ -1,0 +1,28 @@
+﻿{% comment %} 
+   Creates the html code for a slider panel component.
+   Inputs:
+     - panel : 
+          "panelId"     : Unique Id
+          "displayName" : The title of the panel 
+          "jsonName"    : The name of the parameter to be used in the REST calls. 
+          "content"     : Content of the paenel
+             "min"      : The min value of the slider
+             "max"      : The max value of the slider
+
+{% endcomment %}
+
+    <div class="panel panel-primary controlPanelItem">
+         <div class="panel-heading text-center">
+            {{panel.displayName}}
+         </div>
+
+         <div class="panel-body" style="width:100%" >
+             <input id="{{panel.panelId}}InputId"
+                    data-slider-id='{{panel.panelId}}SliderId' 
+                    type="text" data-Slider-min="{{panel.content.min}}" 
+                    data-Slider-max="{{panel.content.max}}" 
+                    data-slider-step="1" 
+                    data-slider-value="{{panel.content.default}}"/> 
+         </div>
+
+    </div>

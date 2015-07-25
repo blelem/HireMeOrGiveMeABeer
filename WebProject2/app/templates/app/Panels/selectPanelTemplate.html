@@ -1,0 +1,20 @@
+﻿{% comment %} 
+   Creates the HTML code for a select component.
+   Inputs : 
+     - panel : 
+           "panelId"       : Unique Id
+           "displayName"   : The title of the panel   
+           "jsonName"      : The name of the parameter to be used in the REST calls. 
+           "content"       : An object, with the parameters:
+				"dict"     : A dictionnary containing the items to populate the select. 
+                             Each item has a 'key' and a 'description'
+{% endcomment %}
+
+ <div class="panel panel-primary controlPanelItem">
+         <div class="panel-heading text-center">
+            {{panel.displayName}}
+         </div>
+         <div class="panel-body">
+			 <select class="control-select" data-bind="options: {{panel.jsonName}}Options , optionsText:'description', value: {{panel.jsonName}}Selected"></select>
+         </div>
+ </div>
