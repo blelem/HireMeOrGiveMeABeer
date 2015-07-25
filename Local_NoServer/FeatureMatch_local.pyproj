@@ -6,7 +6,7 @@
     <ProjectGuid>{e4dd0a29-3061-4a52-bf9e-5498fd828b4e}</ProjectGuid>
     <ProjectHome />
     <StartupFile>Top.py</StartupFile>
-    <SearchPath />
+    <SearchPath>..\WebProject\</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <ProjectTypeGuids>{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
@@ -29,6 +29,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\WebProject\app\Alignment2D.py" />
+    <Compile Include="..\WebProject\app\Homography.py">
+      <Link>Homography.py</Link>
+    </Compile>
+    <Compile Include="..\WebProject\app\Similarity.py">
+      <Link>Similarity.py</Link>
+    </Compile>
+    <Compile Include="..\WebProject\app\Translation.py">
+      <Link>Translation.py</Link>
+    </Compile>
     <Compile Include="Top.py" />
   </ItemGroup>
   <Import Project="$(PtvsTargetsFile)" Condition="Exists($(PtvsTargetsFile))" />
