@@ -9,6 +9,10 @@ __pycache__/
 /bin/
 /obj/
 
+#Virtual environment
+
+/env/
+
 # User-specific files
 *.suo
 *.user
