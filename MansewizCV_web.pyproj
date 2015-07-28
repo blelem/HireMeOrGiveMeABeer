@@ -4,9 +4,10 @@
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <Name>MansewizCV_web</Name>
     <RootNamespace>MansewizCV_web</RootNamespace>
-    <InterpreterId>{41d8a39d-4944-4536-904d-1ba5e6e9b3d0}</InterpreterId>
+    <InterpreterId>{37212780-16f8-471a-af13-df4ded24f72e}</InterpreterId>
     <InterpreterVersion>2.7</InterpreterVersion>
     <DjangoSettingsModule>DjangoWebProject.settings</DjangoSettingsModule>
+    <NameOfLastUsedPublishProfile>mansewiz - Web Deploy</NameOfLastUsedPublishProfile>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -59,6 +60,7 @@
     <Folder Include="DjangoWebProject\" />
     <Folder Include="media\" />
     <Folder Include="media\testImages\" />
+    <Folder Include="wheelhouse\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="app\static\app\content\bootstrap-slider.css" />
@@ -69,6 +71,13 @@
     <Content Include="app\templates\app\Panels\selectPanel.js" />
     <Content Include="app\templates\app\Panels\sliderPanel.js" />
     <Content Include="app\templates\app\Panels\sliderPanelTemplate.html" />
+    <Content Include="wheelhouse\CreateVirtualEnv.txt" />
+    <Content Include="wheelhouse\numpy-1.9.2+mkl-cp27-none-win32.whl" />
+    <Content Include="wheelhouse\opencv_python-2.4.11-cp27-none-win32.whl" />
+    <None Include="MansewizCV - Web Deploy.pubxml" />
+    <None Include="MansewizCV - FTP.pubxml" />
+    <None Include="mansewiz - Web Deploy.pubxml" />
+    <None Include="mansewiz - FTP.pubxml" />
     <Content Include="media\testImages\Fit01.jpg" />
     <Content Include="media\testImages\Fit02.jpg" />
     <Content Include="media\testImages\Fit03.jpg" />
@@ -103,6 +112,7 @@
     <Content Include="app\templates\app\layout.html" />
     <Content Include="app\templates\app\login.html" />
     <Content Include="app\templates\app\loginpartial.html" />
+    <Content Include="requirements.txt" />
     <Content Include="web.config" />
     <Content Include="web.debug.config" />
   </ItemGroup>
@@ -112,8 +122,41 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Interpreter Include="env1\">
+      <Id>{0dba71cf-28de-4cc1-8745-f65861a933f1}</Id>
+      <BaseInterpreter>{2af0f10d-7135-4994-9156-5d01c9c11b7e}</BaseInterpreter>
+      <Version>2.7</Version>
+      <Description>env1 (Python 2.7)</Description>
+      <InterpreterPath>Scripts\python.exe</InterpreterPath>
+      <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
+      <LibraryPath>Lib\</LibraryPath>
+      <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
+      <Architecture>X86</Architecture>
+    </Interpreter>
+    <Interpreter Include="env2\">
+      <Id>{5c5a43da-c669-4384-bfe9-15d71306baa8}</Id>
+      <BaseInterpreter>{2af0f10d-7135-4994-9156-5d01c9c11b7e}</BaseInterpreter>
+      <Version>2.7</Version>
+      <Description>env2 (Python 2.7)</Description>
+      <InterpreterPath>Scripts\python.exe</InterpreterPath>
+      <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
+      <LibraryPath>Lib\</LibraryPath>
+      <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
+      <Architecture>X86</Architecture>
+    </Interpreter>
+    <Interpreter Include="env3\">
+      <Id>{82d24daa-fa87-47df-9af5-1d6492c27353}</Id>
+      <BaseInterpreter>{2af0f10d-7135-4994-9156-5d01c9c11b7e}</BaseInterpreter>
+      <Version>2.7</Version>
+      <Description>env3 (Python 2.7)</Description>
+      <InterpreterPath>Scripts\python.exe</InterpreterPath>
+      <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
+      <LibraryPath>Lib\</LibraryPath>
+      <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
+      <Architecture>X86</Architecture>
+    </Interpreter>
     <Interpreter Include="env\">
-      <Id>{41d8a39d-4944-4536-904d-1ba5e6e9b3d0}</Id>
+      <Id>{37212780-16f8-471a-af13-df4ded24f72e}</Id>
       <BaseInterpreter>{2af0f10d-7135-4994-9156-5d01c9c11b7e}</BaseInterpreter>
       <Version>2.7</Version>
       <Description>env (Python 2.7)</Description>
