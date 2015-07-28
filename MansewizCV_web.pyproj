@@ -71,10 +71,10 @@
     <Content Include="app\templates\app\Panels\selectPanel.js" />
     <Content Include="app\templates\app\Panels\sliderPanel.js" />
     <Content Include="app\templates\app\Panels\sliderPanelTemplate.html" />
-    <Content Include="wheelhouse\numpy-1.9.2+mkl-cp27-none-win32.whl" />
-    <Content Include="wheelhouse\opencv_python-2.4.11-cp27-none-win32.whl" />
     <None Include="mansewiz - Web Deploy.pubxml" />
     <None Include="mansewiz - FTP.pubxml" />
+    <Content Include="wheelhouse\numpy-1.9.2+mkl-cp27-none-win32.whl" />
+    <Content Include="wheelhouse\opencv_python-2.4.11-cp27-none-win32.whl" />
     <Content Include="media\testImages\Fit01.jpg" />
     <Content Include="media\testImages\Fit02.jpg" />
     <Content Include="media\testImages\Fit03.jpg" />
@@ -110,8 +110,6 @@
     <Content Include="app\templates\app\login.html" />
     <Content Include="app\templates\app\loginpartial.html" />
     <Content Include="requirements.txt" />
-    <Content Include="web.config" />
-    <Content Include="web.debug.config" />
   </ItemGroup>
   <ItemGroup>
     <None Include="readme.mht">
