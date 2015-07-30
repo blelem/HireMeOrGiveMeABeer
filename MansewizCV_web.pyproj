@@ -68,7 +68,11 @@
     <Content Include="app\static\app\content\bootstrap-slider.min.css" />
     <Content Include="app\static\app\img\banner-bg.jpg" />
     <Content Include="app\static\app\img\Berthier.jpg" />
+    <Content Include="app\static\app\img\d3.png" />
+    <Content Include="app\static\app\img\django.png" />
     <Content Include="app\static\app\img\intro-bg.jpg" />
+    <Content Include="app\static\app\img\pendulum-experiment.jpg" />
+    <Content Include="app\static\app\img\scipy_logo.png" />
     <Content Include="app\static\app\scripts\bootstrap-slider.min.js" />
     <Content Include="app\static\app\scripts\knockout-3.3.0.js" />
     <Content Include="app\templates\app\Panels\selectPanelTemplate.html" />
