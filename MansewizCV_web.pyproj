@@ -7,7 +7,7 @@
     <InterpreterId>{7dbb2624-e9e4-4793-9b3f-acf0785d90ad}</InterpreterId>
     <InterpreterVersion>2.7</InterpreterVersion>
     <DjangoSettingsModule>DjangoWebProject.settings</DjangoSettingsModule>
-    <NameOfLastUsedPublishProfile>mansewiz - Web Deploy</NameOfLastUsedPublishProfile>
+    <NameOfLastUsedPublishProfile>mansewiz - Web Deploy (2)</NameOfLastUsedPublishProfile>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -68,6 +68,8 @@
     <Content Include="app\static\app\content\bootstrap-slider.min.css" />
     <Content Include="app\static\app\img\banner-bg.jpg" />
     <Content Include="app\static\app\img\Berthier.jpg" />
+    <Content Include="app\static\app\img\build-conference.jpg" />
+    <Content Include="app\static\app\img\build-stage-2012.jpg" />
     <Content Include="app\static\app\img\coding4fun.png" />
     <Content Include="app\static\app\img\d3.png" />
     <Content Include="app\static\app\img\Directx9.png" />
@@ -75,6 +77,7 @@
     <Content Include="app\static\app\img\fallfury.png" />
     <Content Include="app\static\app\img\intro-bg.jpg" />
     <Content Include="app\static\app\img\NET_Framework_v4.5_logo.png" />
+    <Content Include="app\static\app\img\Nokia-Imaging-SDK.jpg" />
     <Content Include="app\static\app\img\pendulum-experiment.jpg" />
     <Content Include="app\static\app\img\scipy_logo.png" />
     <Content Include="app\static\app\scripts\bootstrap-slider.min.js" />
@@ -85,6 +88,8 @@
     <Content Include="app\templates\app\Panels\sliderPanelTemplate.html" />
     <None Include="mansewiz - Web Deploy.pubxml" />
     <None Include="mansewiz - FTP.pubxml" />
+    <None Include="mansewiz - Web Deploy %282%29.pubxml" />
+    <None Include="mansewiz - FTP %282%29.pubxml" />
     <Content Include="wheelhouse\numpy-1.9.2+mkl-cp27-none-win32.whl" />
     <Content Include="wheelhouse\opencv_python-2.4.11-cp27-none-win32.whl" />
     <Content Include="media\testImages\Fit01.jpg" />
