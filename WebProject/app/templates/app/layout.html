@@ -36,9 +36,8 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="{% url 'home' %}">Home</a></li>
-                    <li><a href="{% url 'about' %}">About</a></li>
-                    <li><a href="{% url 'matchFeatures' %}">Match Features</a></li>
+                    <li><a href="{% url 'about' %}">About Me</a></li>
+                    <li><a href="{% url 'portfolio' %}">Portfolio</a></li>
                 </ul>
             </div>
         </div>
@@ -48,7 +47,7 @@
 {% block content %}{% endblock %}
         <hr/>
         <footer>
-            <p>&copy; {{ year }} - My Django Application</p>
+            <p>{{ year }} - Berthier Lemieux</p>
         </footer>
     </div>
 

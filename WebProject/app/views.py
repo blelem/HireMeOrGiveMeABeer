@@ -1,4 +1,4 @@
-"""
+﻿"""
 Definition of views.
 """
 
@@ -40,15 +40,44 @@ controlPanels = list( [
 def home(request):
     """Renders the home page."""
     assert isinstance(request, HttpRequest)
+    fail()
     return render(
         request,
-        'app/index.html',
+        'app/home.html',
         context_instance = RequestContext(request,
         {
             'title':'Home Page',
             'year':datetime.now().year,
         })
     )
+
+def about(request):
+    """Renders the about page."""
+    assert isinstance(request, HttpRequest)
+    return render(
+        request,
+        'app/about.html',
+        context_instance = RequestContext(request,
+        {
+            'title':'About',
+            'message':'Your application description page.',
+            'year':datetime.now().year,
+        }))
+
+def portfolio(request):
+    """Renders the portfolio page."""
+    assert isinstance(request, HttpRequest)
+    return render(
+        request,
+        'app/portfolio.html',
+        context_instance = RequestContext(request,
+        {
+            'title':'My Portfolio',
+            'message':'Your application description page.',
+            'year':datetime.now().year,
+        }))
+
+
 
 def merge(request):
     assert isinstance(request, HttpRequest)
@@ -115,16 +144,5 @@ def matchFeatures(request):
             'control_panels'   :  controlPanels
         }))
 
-def about(request):
-    """Renders the about page."""
-    assert isinstance(request, HttpRequest)
-    return render(
-        request,
-        'app/about.html',
-        context_instance = RequestContext(request,
-        {
-            'title':'About',
-            'message':'Your application description page.',
-            'year':datetime.now().year,
-        }))
+
 

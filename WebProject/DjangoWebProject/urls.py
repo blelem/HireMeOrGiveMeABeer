@@ -1,4 +1,4 @@
-"""
+﻿"""
 Definition of urls for DjangoWebProject.
 """
 
@@ -15,10 +15,11 @@ from app.forms import BootstrapAuthenticationForm
 
 urlpatterns = patterns('',
     # Examples:
-    url(r'^$', 'app.views.home', name='home'),
+    url(r'^$', 'app.views.about', name='about'),
     url(r'^matchFeatures$', 'app.views.matchFeatures', name='matchFeatures'),
     url(r'^matchFeatures/merge$', 'app.views.merge', name='merge'),
     url(r'^about', 'app.views.about', name='about'),
+    url(r'^portfolio', 'app.views.portfolio', name='portfolio'),
     url(r'^login/$',
         'django.contrib.auth.views.login',
         {

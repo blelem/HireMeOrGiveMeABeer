@@ -122,7 +122,7 @@
     <Content Include="app\static\app\scripts\_references.js" />
     <Content Include="app\templates\app\about.html" />
     <Content Include="app\templates\app\featurematch.html" />
-    <Content Include="app\templates\app\index.html" />
+    <Content Include="app\templates\app\portfolio.html" />
     <Content Include="app\templates\app\layout.html" />
     <Content Include="app\templates\app\login.html" />
     <Content Include="app\templates\app\loginpartial.html" />
