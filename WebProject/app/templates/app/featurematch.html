@@ -8,7 +8,6 @@
 <br />
 
 <div class="row" >
-
    <div class="col-xs-12 col-md-10 " id="MergedImage">
       <div class="buttons">
         <button class="zoom-in">Zoom In</button>
@@ -17,7 +16,10 @@
       </div>
       <div class="parent">
          <div class="panzoom">
-           <img data-bind="attr: { src: mergedImageUrl() }" style="width:100%;"/>
+             <img id="panzoom-img" data-bind="attr: { src: mergedImageUrl() }" style="width:100%; "/>
+             <div id="panzoom-img-spinner" style="position:absolute; left: 50%;top: 50%; transform: translate(-50%, -50%); display:none">
+                  <i class="fa fa-circle-o-notch fa-spin fa-5x" ></i>
+             </div>
          </div>
 	   </div>
    </div>
@@ -104,17 +106,18 @@
 	$(".zoom-in").click( function() {$('.panzoom').panzoom("enable");});
 	$('.panzoom').panzoom("disable");
 
-
-    
 	function DoMerge() {
 		var jsonData = { inputImagesSelected : viewModel.selectedInputImages().pk };
 		viewModel.jsonData.forEach( function(elem) { $.extend( jsonData, elem() ) });
 
+        $('#panzoom-img').fadeTo( "fast", 0.4 );
+        $('#panzoom-img-spinner').show();
 		$.get("/matchFeatures/merge", jsonData, function(returnedData) {
 			viewModel.mergedImageUrl(returnedData.mergedImageUrl);    
+            $('#panzoom-img').fadeTo( "fast", 1.0);
+            $('#panzoom-img-spinner').hide();
 		})
 	}
-
 
 	// KO viewmodel
 	function AppViewModel() {
