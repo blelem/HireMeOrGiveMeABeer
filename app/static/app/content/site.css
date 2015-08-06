@@ -60,3 +60,9 @@ input[type="checkbox"].input-validation-error {
     padding-left: 5px;
 }
 
+/* TODO: Experimental code: remove ! */
+@keyframes greenPulse {
+  from { background-color: #749a02; -webkit-box-shadow: 0 0 9px #333; }
+  50% { background-color: #91bd09; -webkit-box-shadow: 0 0 18px #91bd09; }
+  to { background-color: #749a02; -webkit-box-shadow: 0 0 9px #333; }
+}
