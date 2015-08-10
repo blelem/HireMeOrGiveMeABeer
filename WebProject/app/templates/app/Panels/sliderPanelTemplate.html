@@ -22,7 +22,9 @@
                     type="text" data-Slider-min="{{panel.content.min}}" 
                     data-Slider-max="{{panel.content.max}}" 
                     data-slider-step="1" 
-                    data-slider-value="{{panel.content.default}}"/> 
+                    data-slider-value="{{panel.content.default}}"
+                    data-bind= "sliderValueChanged : {{panel.jsonName}}.SliderValue"
+                    /> 
          </div>
 
     </div>

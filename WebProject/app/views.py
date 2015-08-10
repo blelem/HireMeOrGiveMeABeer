@@ -29,7 +29,7 @@ controlPanels = list( [
           'panelId'        : 'JacobianPanel',
           'jsonName'       :  'Jacobian',
           'content'        :  Alignment2D.JacobiansList()   },
-
+          
         { 'panelTemplate'  : 'app/Panels/sliderPanel.js', 
           'displayName'    : 'Max distance', 
           'panelId'        : 'MaxDistancePanel',
@@ -100,9 +100,9 @@ def merge(request):
     return response
 
     
-def mergeImages(img1, img2, AlignMethod = '', Jacobian = '', MaxDistance ='', **kwargs):
+def mergeImages(img1, img2, AlignMethod = '', Jacobian = '',  **kwargs):
    
-    (kp1Matches, kp2Matches) = Alignment2D.ExtractFeatures(img1, img2, MaxDistance)
+    (kp1Matches, kp2Matches) = Alignment2D.ExtractFeatures(img1, img2, **kwargs)
   
     Transform =  Alignment2D.AlignImages(kp1Matches, kp2Matches, AlignMethod, Jacobian) 
 
