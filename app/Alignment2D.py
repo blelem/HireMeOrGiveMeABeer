@@ -36,7 +36,7 @@ def AlignMethodList():
                  ])
 
 
-def ExtractFeatures(img1, img2, MaxDistance=100):
+def ExtractFeatures(img1, img2, MaxDistance=100, **kwargs):
     """ Find descriptors and match descriptors 
         (kp1Matches, kp2Matches) = Alignment2D.SetupTheStuff(image1, image2) """
 

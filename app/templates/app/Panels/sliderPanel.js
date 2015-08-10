@@ -12,23 +12,40 @@ Creates the HTML code for a slider component.
 
 {% endcomment %}
 
-// Append the html code to DOM
-$('#{{panel.panelId}}').append(" {% filter escapejs %} {% include "app/Panels/sliderPanelTemplate.html" %} {% endfilter %} ");
+function()
+{
+    // Append the html code to DOM
+    $('#{{panel.panelId}}').append(" {% filter escapejs %} {% include "app/Panels/sliderPanelTemplate.html" %} {% endfilter %} ");
 
-// Activate the slider
-self.{{panel.panelId}} = $('#{{panel.panelId}}InputId').slider({
-    formatter: function(value) {
-    		return 'Current value: ' + value;
-    }   
-});
+    // Activate the slider
+    $('#{{panel.panelId}}InputId').slider({formatter: function(value) { return 'Current value: ' + value;} });
 
-// Make sure the slider is full width 
-$('#{{panel.panelId}}SliderId').css('width', '100%');
+    // Make sure the slider is full width 
+    $('#{{panel.panelId}}SliderId').css('width', '100%');
 
-{{panel.panelId}}SliderId
+    // Build the viewmodel for ko.js
+    var viewmodel = {};
 
-// Callback that returns the selected value
-self.jsonData.push ( function() { 
-    return { '{{ panel.jsonName }}' : self.{{panel.panelId}}.slider('getValue') }
-});
+    // Custom ko binding "sliderValueChanged" registration
+    ko.bindingHandlers.sliderValueChanged = {
+        init: function(element, valueAccessor) {
+           $(element).on("change", function(sliderValues) {
+              var value = valueAccessor(); // The binded ko model property we want to change.
+              value(sliderValues.value.newValue);
+           });
+        }
+    };
+
+    var sliderDefaultValue = $('#{{panel.panelId}}InputId').slider('getValue');
+    viewmodel.SliderValue= ko.observable(sliderDefaultValue);
+
+    // The functions required to implement the interface required by the panel framework. 
+    viewmodel.subscribeValueChanged = function(callback) {
+         this.SliderValue.subscribe(callback) ;
+    };
+    viewmodel.selectedValueAsJSON = function() { return { '{{ panel.jsonName }}' : this.SliderValue()}};
+
+    return viewmodel;
+}
+
 

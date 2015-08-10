@@ -25,10 +25,8 @@
    </div>
    <div class="col-xs-12 col-md-2 controlPanel">
 	   <div class="text-center">
-			<!--  TO DO! Experimental code, remove!
-<button class="btn btn-danger btn-md" type="button" onclick="DoMerge()" style="animation-name: greenPulse; animation-duration: 2s; animation-iteration-count: infinite;">
-	-->
-		<button class="btn btn-danger btn-md" type="button" onclick="DoMerge()" >
+			
+		<button class="btn btn-danger btn-md" type="button" onclick="DoMerge()" data-bind="visible: showMergeButton">
 				 Merge images !
 			</button>
 	    </div>
@@ -111,8 +109,7 @@
 
 	function DoMerge() {
 		var jsonData = { inputImagesSelected : viewModel.selectedInputImages().pk };
-		viewModel.jsonData.forEach( function(elem) { $.extend( jsonData, elem() ) });
-
+        viewModel.panelsVM.forEach( function(elem) { $.extend( jsonData, elem.selectedValueAsJSON() ) }); 
         $('#panzoom-img').fadeTo( "fast", 0.4 );
         $('#panzoom-img-spinner').show();
 		$.get("/matchFeatures/merge", jsonData, function(returnedData) {
@@ -124,8 +121,16 @@
 
 	// KO viewmodel
 	function AppViewModel() {
+
+        function oneOfThePanelValueChanged()
+        {
+             self.showMergeButton(true);
+        }
+
 		var self = this;
+        self.panelsVM = [];
 		self.jsonData = [];
+        self.showMergeButton = ko.observable(false);
 		
 	    self.selectInputImages = function(inputImages) {
              self.selectedInputImages(inputImages);
@@ -140,10 +145,14 @@
 			{% endfor %}
 		]);
 		self.selectedInputImages =  ko.observable(self.availableInputImages()[0]);
-		
+
+
 	    {% for panel in control_panels %}
            {%if panel.panelTemplate %}
-                {% include panel.panelTemplate with panel=panel %}
+                var panelViewmodel = {% include panel.panelTemplate with panel=panel %} ();
+                self.{{panel.jsonName}} = panelViewmodel; // Add to the global viewmodel.
+                self.panelsVM.push(panelViewmodel);
+                panelViewmodel.subscribeValueChanged(oneOfThePanelValueChanged);
            {% endif %}
         {% endfor %}
 

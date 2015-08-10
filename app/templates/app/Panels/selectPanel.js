@@ -10,19 +10,30 @@ Creates the HTML code for a select component.
 {% endcomment %}
 
 
+function () {
     // Append the html code to DOM
     $('#{{panel.panelId}}').append(" {% filter escapejs %} {% include "app/Panels/selectPanelTemplate.html" %} {% endfilter %} ");
 
+
+    // Build the viewmodel for ko.js
+    var viewmodel = {};
+
     // Prepare the option list
-    self.{{ panel.jsonName }}Options = ko.observableArray([
-			{% for key, values in panel.content.items %}
-				{ id	      : "{{ key }}" ,
-				  description : "{{ values.description }}" },
-			{% endfor %}
+    viewmodel.Options = ko.observableArray([
+        {% for key, values in panel.content.items %}
+            { id	      : "{{ key }}" ,
+              description : "{{ values.description }}" },
+        {% endfor %}
     ]);
 
     // Observe the selected value
-    self.{{ panel.jsonName }}Selected = ko.observable(self.{{ panel.jsonName }}Options()[0]);
+    viewmodel.Selected = ko.observable(viewmodel.Options()[0]);
 
-    // Callback that returns the selected value
-	self.jsonData.push ( function() { return { '{{ panel.jsonName }}' : viewModel.{{ panel.jsonName }}Selected().id }});
+    // The functions required to implement the interface required by the panel framework. 
+    viewmodel.subscribeValueChanged = function(callback) {
+         this.Selected.subscribe(callback) ;
+    };
+    viewmodel.selectedValueAsJSON = function() { return { '{{ panel.jsonName }}' : this.Selected().id }};
+
+    return viewmodel;
+}
