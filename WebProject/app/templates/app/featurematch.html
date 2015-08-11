@@ -116,6 +116,7 @@
 			viewModel.mergedImageUrl(returnedData.mergedImageUrl);    
             $('#panzoom-img').fadeTo( "fast", 1.0);
             $('#panzoom-img-spinner').hide();
+            viewModel.showMergeButton(false);
 		})
 	}
 
@@ -145,7 +146,7 @@
 			{% endfor %}
 		]);
 		self.selectedInputImages =  ko.observable(self.availableInputImages()[0]);
-
+        self.selectedInputImages.subscribe(oneOfThePanelValueChanged);
 
 	    {% for panel in control_panels %}
            {%if panel.panelTemplate %}
