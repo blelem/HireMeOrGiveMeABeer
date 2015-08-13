@@ -145,4 +145,26 @@ def matchFeatures(request):
         }))
 
 
+def imageSelection(request):
+    """Renders the select Image page."""
+    assert isinstance(request, HttpRequest)
+
+    
+    # Accessing directly the Azure blob storage. TODO: access via a model.
+    from azure.storage import BlobService
+    blob_service = BlobService(account_name='mansewiz', account_key='nexzj9VdFGQeTwagdnLOrGp4nXWNuNnnCJkFJbpqT58/A5iX0kdEqcUF0AGvxj9h0s7DXJdZruQGUj9KVldCpQ==')
+
+    blob_service.create_container('mycontainer')
+    
+    for image in InputImages.objects.all():       
+        print image.image_1_url();
+
+    return render(request,
+        'app/imageSelection.html',
+        context_instance = RequestContext(request,
+        {
+           'input_image_list' : InputImages.objects.all(), 
+         }));
+
+
 

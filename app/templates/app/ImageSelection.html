@@ -1,0 +1,42 @@
+﻿{% extends "app/layout.html" %}
+{% block content %}
+{% load staticfiles %}
+
+    <div class="modal-body">
+            <div class="row">
+               <div data-bind="foreach: availableInputImages">
+                  <div class="col-xs-6 col-md-3" > 
+                     <a href="#" class="thumbnail">
+                     <img data-bind="attr: { src: image_1 }">
+                     <br> 
+                     <img data-bind="attr: { src: image_2 }">
+                     </a>
+                  </div>
+               </div>
+            </div>
+        </div>
+{% endblock %}
+
+
+{% block scripts %}
+
+<script>
+// KO viewmodel
+	function AppViewModel() {
+
+		var self = this;
+	
+	    self.availableInputImages = ko.observableArray([
+			{% for image_set in input_image_list %}
+				{ image_1 : "{{ image_set.image_1.url }}" , 
+				  image_2 : "{{ image_set.image_2.url }}" ,		
+				  pk	  : "{{ image_set.pk }}"  },		
+			{% endfor %}
+		]);
+	}
+
+	// Activates knockout.js
+	viewModel = new AppViewModel();
+	ko.applyBindings(viewModel);
+ </script>
+{% endblock %}
