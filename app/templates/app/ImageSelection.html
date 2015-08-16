@@ -27,10 +27,10 @@
 		var self = this;
 	
 	    self.availableInputImages = ko.observableArray([
-			{% for image_set in input_image_list %}
-				{ image_1 : "{{ image_set.image_1.url }}" , 
-				  image_2 : "{{ image_set.image_2.url }}" ,		
-				  pk	  : "{{ image_set.pk }}"  },		
+			{% for image in input_image_list %}
+				{ image_1 : "{{ image.thumb1 }}" , 
+				  image_2 : "{{ image.thumb2 }}" ,		
+				  pk	  : "{{ image.pk }}"  },		
 			{% endfor %}
 		]);
 	}

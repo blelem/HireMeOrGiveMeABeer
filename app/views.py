@@ -83,9 +83,9 @@ def merge(request):
     assert isinstance(request, HttpRequest)
     filePk = request.GET['inputImagesSelected']
 
-    file = InputImages.objects.get(pk=filePk)
-    img1 = cv2.imread(file.image_1.path, cv2.CV_LOAD_IMAGE_COLOR)
-    img2 = cv2.imread(file.image_2.path, cv2.CV_LOAD_IMAGE_COLOR)
+    image = InputImages.objects.get(pk=filePk)
+    img1 = cv2.imread(image.image_url(1, False), cv2.CV_LOAD_IMAGE_COLOR)
+    img2 = cv2.imread(image.image.url(2, False), cv2.CV_LOAD_IMAGE_COLOR)
 
     Canvas1 = mergeImages(img1, img2, **request.GET.dict())
     
@@ -149,21 +149,19 @@ def imageSelection(request):
     """Renders the select Image page."""
     assert isinstance(request, HttpRequest)
 
-    
-    # Accessing directly the Azure blob storage. TODO: access via a model.
-    from azure.storage import BlobService
-    blob_service = BlobService(account_name='mansewiz', account_key='nexzj9VdFGQeTwagdnLOrGp4nXWNuNnnCJkFJbpqT58/A5iX0kdEqcUF0AGvxj9h0s7DXJdZruQGUj9KVldCpQ==')
-
-    blob_service.create_container('mycontainer')
-    
-    for image in InputImages.objects.all():       
-        print image.image_1_url();
+    displayedImages = [
+        {
+            'thumb1': image.image_url(1, False),
+            'thumb2': image.image_url(2, False),
+            'pk': image.pk
+        }
+        for image in InputImages.objects.all()]
 
     return render(request,
         'app/imageSelection.html',
         context_instance = RequestContext(request,
         {
-           'input_image_list' : InputImages.objects.all(), 
+           'input_image_list' : displayedImages, 
          }));
 
 

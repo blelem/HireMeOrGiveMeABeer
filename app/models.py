@@ -12,7 +12,12 @@ class InputImages(models.Model):
 
     imageProvider = azureImageProvider.azureImageProvider()
 
-    def image_1_url(self):
-        strm = self.imageProvider.getUrl('myblob')
-        return strm;
+    def image_url(self, subindex, thumbnail = False):
+        """ Returns the url for one of the images of the set"""
+
+        blobname = str(self.pk) + "-" + str(subindex)
+        if (thumbnail == True):
+            blobname += "-tn"
+        blobname += ".jpg"
+        return self.imageProvider.getUrl(blobname)
 
