@@ -151,8 +151,8 @@ def imageSelection(request):
 
     displayedImages = [
         {
-            'thumb1': image.image_url(1, False),
-            'thumb2': image.image_url(2, False),
+            'thumb1': image.image_url(0, False),
+            'thumb2': image.image_url(1, False),
             'pk': image.pk
         }
         for image in InputImages.objects.all()]
