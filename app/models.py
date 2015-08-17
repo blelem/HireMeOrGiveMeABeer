@@ -16,7 +16,7 @@ class InputImages(models.Model):
         """ Returns the url for one of the images of the set"""
 
         blobname = str(self.pk) + "-" + str(subindex)
-        if (thumbnail == True):
+        if (thumbnail):
             blobname += "-tn"
         blobname += ".jpg"
         return self.imageProvider.getUrl(blobname)
