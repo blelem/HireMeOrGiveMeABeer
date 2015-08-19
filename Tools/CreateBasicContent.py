@@ -33,7 +33,7 @@ for image in images:
            x_ms_blob_content_type='image/jpg' )
 
         # Create and upload thumbnails
-        size = 128, 128
+        size = 256, 256
 
         im = Image.open(filename)
         im.thumbnail(size, Image.ANTIALIAS)      

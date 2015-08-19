@@ -2,15 +2,17 @@
 {% block content %}
 {% load staticfiles %}
 
+
     <div class="modal-body">
             <div class="row">
-               <div data-bind="foreach: availableInputImages">
-                  <div class="col-xs-6 col-md-3" > 
+               <div data-bind="foreach: availableInputImages"    >
+                  <div class="col-xs-6 col-sm-3 chose"> 
                      <a href="#" class="thumbnail">
                      <img data-bind="attr: { src: image_1 }">
                      <br> 
                      <img data-bind="attr: { src: image_2 }">
                      </a>
+                      
                   </div>
                </div>
             </div>
@@ -21,11 +23,32 @@
 {% block scripts %}
 
 <script>
+    $(".chose :eq(2)").after("<p>Test</p>");
 // KO viewmodel
 	function AppViewModel() {
 
 		var self = this;
 	
+		self.availableInputImages = ko.observableArray([
+			
+        { image_1 : "./static/app/img/1-0-tn.jpg" , 
+            image_2 : "./static/app/img/1-0-tn.jpg" ,		
+            pk	  : "1"  },		
+			
+        { image_1 : "./static/app/img/1-0-tn.jpg" , 
+            image_2 : "./static/app/img/2-1-tn.jpg" ,		
+            pk	  : "2"  },		
+			
+        { image_1 : "./static/app/img/1-0-tn.jpg" , 
+            image_2 : "./static/app/img/1-1-tn.jpg" ,		
+            pk	  : "3"  },		
+			
+        { image_1 : "./static/app/img/4-0-tn.jpg" , 
+            image_2 : "./static/app/img/4-1-tn.jpg" ,		
+            pk	  : "4"  },		
+			
+		]);
+        /*
 	    self.availableInputImages = ko.observableArray([
 			{% for image in input_image_list %}
 				{ image_1 : "{{ image.thumb1 }}" , 
@@ -33,6 +56,7 @@
 				  pk	  : "{{ image.pk }}"  },		
 			{% endfor %}
 		]);
+        */
 	}
 
 	// Activates knockout.js
