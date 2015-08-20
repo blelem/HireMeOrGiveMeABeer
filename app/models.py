@@ -19,10 +19,5 @@ class InputImages(models.Model):
         if (thumbnail):
             blobname += "-tn"
         blobname += ".jpg"
-        online=  self.imageProvider.getUrl(blobname).replace(r"https://mansewiz.blob.core.windows.net/matchfeatures/", 
-                                                            r"./static/app/img/")
-        return online
-       # return r"https://mansewiz.blob.core.windows.net/matchfeatures/1-0-tn.jpg"
-       # return r"./static/app/img/1-0-tn.jpg"
         return self.imageProvider.getUrl(blobname)
 

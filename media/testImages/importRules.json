@@ -1,10 +1,5 @@
 [
   { "files": [ "fit01.jpg", "fit02.jpg", "fit03.jpg" ], "pk": 1 } ,
   { "files": [ "IMG_5283_1.jpg", "IMG_5283_2.jpg" ], "pk": 2 } ,
-  {
-    "files": [ "Oslo_Panorama_1.jpg", "Oslo_Panorama_2.jpg" ],
-    "pk": 3
-  },
-  
-  { "files": [ "Oslo_Panorama_1.jpg", "Oslo_Panorama_2.jpg" ], "pk": 4 } 
+  { "files": [ "Oslo_Panorama_1.jpg", "Oslo_Panorama_2.jpg" ], "pk": 3 } 
 ]
