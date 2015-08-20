@@ -20,6 +20,7 @@ urlpatterns = patterns('',
     url(r'^matchFeatures/merge$', 'app.views.merge', name='merge'),
     url(r'^about', 'app.views.about', name='about'),
     url(r'^portfolio', 'app.views.portfolio', name='portfolio'),
+    url(r'^imageSelection', 'app.views.imageSelection'),
     url(r'^login/$',
         'django.contrib.auth.views.login',
         {

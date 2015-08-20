@@ -83,9 +83,9 @@ def merge(request):
     assert isinstance(request, HttpRequest)
     filePk = request.GET['inputImagesSelected']
 
-    file = InputImages.objects.get(pk=filePk)
-    img1 = cv2.imread(file.image_1.path, cv2.CV_LOAD_IMAGE_COLOR)
-    img2 = cv2.imread(file.image_2.path, cv2.CV_LOAD_IMAGE_COLOR)
+    image = InputImages.objects.get(pk=filePk)
+    img1 = cv2.imread(image.image_url(1, False), cv2.CV_LOAD_IMAGE_COLOR)
+    img2 = cv2.imread(image.image.url(2, False), cv2.CV_LOAD_IMAGE_COLOR)
 
     Canvas1 = mergeImages(img1, img2, **request.GET.dict())
     
@@ -143,6 +143,26 @@ def matchFeatures(request):
             'selected_input_image' : input_image_set,
             'control_panels'   :  controlPanels
         }))
+
+
+def imageSelection(request):
+    """Renders the select Image page."""
+    assert isinstance(request, HttpRequest)
+
+    displayedImages = [
+        {
+            'thumb1': image.image_url(0, True),
+            'thumb2': image.image_url(1, True),
+            'pk': image.pk
+        }
+        for image in InputImages.objects.all()]
+
+    return render(request,
+        'app/imageSelection.html',
+        context_instance = RequestContext(request,
+        {
+           'input_image_list' : displayedImages, 
+         }));
 
 
 

@@ -1,0 +1,56 @@
+﻿{% extends "app/layout.html" %}
+{% block content %}
+{% load staticfiles %}
+
+    <div class="modal-body">
+            <div class="row">
+               <div data-bind="foreach: availableInputImages" class="tnList clearfix" >
+                  <div class="col-xs-6 col-sm-3 tnHolder "> 
+                     <a href="#" class="thumbnail">
+                     <img data-bind="attr: { src: image_1 }">
+                     <br> 
+                     <img data-bind="attr: { src: image_2 }">
+                     </a>
+                  </div>
+               </div>
+            </div>
+        </div>
+{% endblock %}
+
+
+{% block scripts %}
+
+<script>
+// KO viewmodel
+	function AppViewModel() {
+
+		var self = this;
+	
+		
+	    self.availableInputImages = ko.observableArray([
+			{% for image in input_image_list %}
+				{ image_1 : "{{ image.thumb1 }}" , 
+				  image_2 : "{{ image.thumb2 }}" ,		
+				  pk	  : "{{ image.pk }}"  },		
+			{% endfor %}
+		]);
+       
+	}
+
+	// Activates knockout.js
+	viewModel = new AppViewModel();
+	ko.applyBindings(viewModel);
+
+    // Add the .clearfix to properly end one row of image.
+
+	$('.tnList >').each(function (index) {
+	    if (index % 4 === 1) {
+	        $( this ).after('<div class="clearfix visible-xs-block"></div>');
+	    }
+	    if (index % 4 === 3) {
+	         $(this).after('<div class="clearfix"></div>');
+	    }
+	});
+
+ </script>
+{% endblock %}
