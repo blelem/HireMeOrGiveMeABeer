@@ -2,6 +2,11 @@
 {% block content %}
 {% load staticfiles %}
 
+  <span class="btn btn-primary btn-file">Upload an image set<input type="file" data-bind="event: { fileselect: fileSelected }" multiple >
+  </span>
+
+  <img id="my_image" />
+
     <div class="modal-body">
             <div class="row">
                <div data-bind="foreach: availableInputImages" class="tnList clearfix" >
@@ -25,8 +30,6 @@
 	function AppViewModel() {
 
 		var self = this;
-	
-		
 	    self.availableInputImages = ko.observableArray([
 			{% for image in input_image_list %}
 				{ image_1 : "{{ image.thumb1 }}" , 
@@ -35,13 +38,21 @@
 			{% endfor %}
 		]);
        
+        self.files = [];
+        self.fileSelected = function(data, event, numFiles, label) {
+
+            console.log(numFiles);
+            console.log(label);
+        }
+
 	}
 
 	// Activates knockout.js
 	viewModel = new AppViewModel();
 	ko.applyBindings(viewModel);
 
-    // Add the .clearfix to properly end one row of image.
+
+// Add the .clearfix to properly end one row of image.
 
 	$('.tnList >').each(function (index) {
 	    if (index % 4 === 1) {
@@ -52,5 +63,25 @@
 	    }
 	});
 
+// fire an event called fileselect when a file is selected
+    $('.btn-file :file').on('change', function() {
+        var input = $(this),
+        numFiles = input.get(0).files ? input.get(0).files.length : 1,
+        label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+        input.trigger('fileselect', [numFiles, label]);
+
+        var fileSelected = input.get(0).files[0];
+        // Using FileReader to display the image content
+        var reader = new FileReader();
+        reader.onload = function(e) 
+            { 
+                $("#my_image").attr("src",e.target.result);
+           
+            };
+        reader.readAsDataURL(fileSelected);
+
+   });
+
+  
  </script>
 {% endblock %}
