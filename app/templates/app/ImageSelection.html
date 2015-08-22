@@ -1,25 +1,66 @@
-﻿{% extends "app/layout.html" %}
+﻿
+{% extends "app/layout.html" %}
 {% block content %}
 {% load staticfiles %}
 
-  <span class="btn btn-primary btn-file">Upload an image set<input type="file" data-bind="event: { fileselect: fileSelected }" multiple >
-  </span>
+<div class="jumbotron">
+    <h1>Select an Image Set!</h1>
+    <p>
+        Select the images you want to work on from the generous list below, or maybe upload your own.
+    </p>
+</div>
 
-  <img id="my_image" />
-
-    <div class="modal-body">
-            <div class="row">
-               <div data-bind="foreach: availableInputImages" class="tnList clearfix" >
-                  <div class="col-xs-6 col-sm-3 tnHolder "> 
-                     <a href="#" class="thumbnail">
-                     <img data-bind="attr: { src: image_1 }">
-                     <br> 
-                     <img data-bind="attr: { src: image_2 }">
-                     </a>
-                  </div>
-               </div>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            Create your own image set
+        </h3>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-xs-12  ">
+                <!-- Add an image button -->
+                <span class="btn btn-primary btn-file">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    <input type="file" multiple>
+                </span>
             </div>
         </div>
+        <!-- The grid of images to upload -->
+        <div class="row" style="margin-top:20px" data-bind="visible: shouldShowFilesToUpload">
+            <div data-bind="foreach: filesToUpload " class="tnList clearfix">
+                <div class="col-xs-6 col-sm-3 tnHolder ">
+                    <a href="#" class="thumbnail">
+                        <img data-bind="attr: { src: image_1 }">
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Use existing image set</h3>
+    </div>
+    <div class="panel-body">
+
+        <!-- The grid of images available on the server -->
+
+        <div class="row">
+            <div data-bind="foreach: availableInputImages" class="tnList clearfix">
+                <div class="col-xs-6 col-sm-3 tnHolder ">
+                    <a href="#" class="thumbnail">
+                        <img data-bind="attr: { src: image_1 }">
+                        <br>
+                        <img data-bind="attr: { src: image_2 }">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 
@@ -27,60 +68,54 @@
 
 <script>
 // KO viewmodel
-	function AppViewModel() {
+function AppViewModel() {
 
-		var self = this;
-	    self.availableInputImages = ko.observableArray([
-			{% for image in input_image_list %}
-				{ image_1 : "{{ image.thumb1 }}" , 
-				  image_2 : "{{ image.thumb2 }}" ,		
-				  pk	  : "{{ image.pk }}"  },		
-			{% endfor %}
-		]);
+    var self = this;
+    self.availableInputImages = ko.observableArray([
+        {% for image in input_image_list %}
+            { image_1 : "{{ image.thumb1 }}" , 
+                image_2 : "{{ image.thumb2 }}" ,		
+                pk	  : "{{ image.pk }}"  },		
+        {% endfor %}
+        ]);
        
-        self.files = [];
-        self.fileSelected = function(data, event, numFiles, label) {
+    self.filesToUpload = ko.observableArray();
+    self.shouldShowFilesToUpload = ko.computed(function() {
+        return (self.filesToUpload().length > 0 );
+    }, self);
+}
 
-            console.log(numFiles);
-            console.log(label);
-        }
-
-	}
-
-	// Activates knockout.js
-	viewModel = new AppViewModel();
-	ko.applyBindings(viewModel);
-
+// Activates knockout.js
+viewModel = new AppViewModel();
+ko.applyBindings(viewModel);
 
 // Add the .clearfix to properly end one row of image.
 
-	$('.tnList >').each(function (index) {
-	    if (index % 4 === 1) {
-	        $( this ).after('<div class="clearfix visible-xs-block"></div>');
-	    }
-	    if (index % 4 === 3) {
-	         $(this).after('<div class="clearfix"></div>');
-	    }
-	});
+$('.tnList >').each(function (index) {
+    if (index % 4 === 1) {
+        $(this).after('<div class="clearfix visible-xs-block"></div>');
+    }
+    if (index % 4 === 3) {
+        $(this).after('<div class="clearfix"></div>');
+    }
+});
 
-// fire an event called fileselect when a file is selected
-    $('.btn-file :file').on('change', function() {
-        var input = $(this),
-        numFiles = input.get(0).files ? input.get(0).files.length : 1,
-        label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
-        input.trigger('fileselect', [numFiles, label]);
+// When a file is selected add it to the viewModel 
+$('.btn-file :file').on('change', function() {
+    var input = $(this),
+    numFiles = input.get(0).files ? input.get(0).files.length : 1,
+    label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
 
-        var fileSelected = input.get(0).files[0];
-        // Using FileReader to display the image content
-        var reader = new FileReader();
-        reader.onload = function(e) 
-            { 
-                $("#my_image").attr("src",e.target.result);
-           
-            };
-        reader.readAsDataURL(fileSelected);
-
-   });
+    var fileSelected = input.get(0).files[0];
+    // Using FileReader to display the image content
+    var reader = new FileReader();
+    reader.onload = function(e) 
+    { 
+        viewModel.filesToUpload.push({'image_1' : e.target.result });
+              
+    };
+    reader.readAsDataURL(fileSelected);
+});
 
   
  </script>
