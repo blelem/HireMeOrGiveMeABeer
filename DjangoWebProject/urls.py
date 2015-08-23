@@ -21,6 +21,7 @@ urlpatterns = patterns('',
     url(r'^about', 'app.views.about', name='about'),
     url(r'^portfolio', 'app.views.portfolio', name='portfolio'),
     url(r'^imageSelection', 'app.views.imageSelection'),
+    url(r'^imageUpload', 'app.views.imageUpload'),
     url(r'^login/$',
         'django.contrib.auth.views.login',
         {

@@ -144,6 +144,10 @@ def matchFeatures(request):
             'control_panels'   :  controlPanels
         }))
 
+def imageUpload(request):
+    """Renders the select Image page."""
+    assert isinstance(request, HttpRequest)
+
 
 def imageSelection(request):
     """Renders the select Image page."""

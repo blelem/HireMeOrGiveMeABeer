@@ -61,8 +61,15 @@
         </div>
     </div>
 </div>
-{% endblock %}
 
+
+<div style="display: none;" >
+    <form id="imageUploadForm" enctype="multipart/form-data" method="post">
+        {% csrf_token %}
+    </form>
+</div>
+
+{% endblock %}
 
 {% block scripts %}
 
@@ -111,11 +118,49 @@ $('.btn-file :file').on('change', function() {
         var reader = new FileReader(); 
         reader.onload = function(e) { 
             viewModel.filesToUpload.push({'image_1' : e.target.result });
+            var fd = new FormData();
+            fd.append("author", "Shiv Kumar");
+            fd.append("name", "Html 5 File API/FormData");
+            fd.append("fileToUpload", fileSelected);
+
+            var csrfmiddlewaretoken = $("#imageUploadForm > input[name='csrfmiddlewaretoken']").val();
+            fd.append("csrfmiddlewaretoken", csrfmiddlewaretoken);
+            var xhr = new XMLHttpRequest();
+
+          /* event listners */
+           xhr.addEventListener("load", uploadComplete, false);
+           xhr.addEventListener("error", uploadFailed, false);
+           /* Be sure to change the url below to the url of your upload server side script */
+           xhr.open("POST", "imageUpload");
+           xhr.send(fd);
+
         };
         reader.readAsDataURL(fileSelected);
     });
 });
 
+function uploadProgress(evt) {
+  if (evt.lengthComputable) {
+    var percentComplete = Math.round(evt.loaded * 100 / evt.total);
+    document.getElementById('progressNumber').innerHTML = percentComplete.toString() + '%';
+  }
+  else {
+    document.getElementById('progressNumber').innerHTML = 'unable to compute';
+  }
+}
+
+function uploadComplete(evt) {
+  /* This event is raised when the server send back a response */
+  alert(evt.target.responseText);
+}
+
+function uploadFailed(evt) {
+  alert("There was an error attempting to upload the file.");
+}
+
+function uploadCanceled(evt) {
+  alert("The upload has been canceled by the user or the browser dropped the connection.");
+}  
   
  </script>
 {% endblock %}
