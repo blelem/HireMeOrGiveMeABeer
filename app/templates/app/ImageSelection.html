@@ -74,8 +74,8 @@ function AppViewModel() {
     self.availableInputImages = ko.observableArray([
         {% for image in input_image_list %}
             { image_1 : "{{ image.thumb1 }}" , 
-                image_2 : "{{ image.thumb2 }}" ,		
-                pk	  : "{{ image.pk }}"  },		
+              image_2 : "{{ image.thumb2 }}" ,		
+              pk	  : "{{ image.pk }}"  },		
         {% endfor %}
         ]);
        
@@ -106,15 +106,14 @@ $('.btn-file :file').on('change', function() {
     numFiles = input.get(0).files ? input.get(0).files.length : 1,
     label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
 
-    var fileSelected = input.get(0).files[0];
-    // Using FileReader to display the image content
-    var reader = new FileReader();
-    reader.onload = function(e) 
-    { 
-        viewModel.filesToUpload.push({'image_1' : e.target.result });
-              
-    };
-    reader.readAsDataURL(fileSelected);
+    Array.prototype.forEach.call(input.get(0).files, function(fileSelected) {
+        // Using FileReader to display the image content
+        var reader = new FileReader(); 
+        reader.onload = function(e) { 
+            viewModel.filesToUpload.push({'image_1' : e.target.result });
+        };
+        reader.readAsDataURL(fileSelected);
+    });
 });
 
   
