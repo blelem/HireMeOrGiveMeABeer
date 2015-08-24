@@ -7,7 +7,7 @@ from django.http import HttpRequest
 from django.template import RequestContext
 from django.conf import settings
 from django.conf.urls.static import static
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from datetime import datetime
 from app.models import InputImages, HostedImage, ImageSet
 
@@ -151,8 +151,8 @@ def imageUpload(request):
 
     form = UploadFileForm(request.POST, request.FILES)
     if form.is_valid():
-            img = HostedImage(fullResImage=request.FILES['fileToUpload'],
-                      ImageSet=form.imageSetId)
+            imageSetToUploadTo = ImageSet.objects.get(pk=form.cleaned_data['imageSetId'])
+            img = HostedImage(fullResImage=request.FILES['fileToUpload'], imageSet=imageSetToUploadTo)
             img.save()
             return HttpResponse()
     else:
