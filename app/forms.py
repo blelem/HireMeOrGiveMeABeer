@@ -1,4 +1,4 @@
-"""
+﻿"""
 Definition of forms.
 """
 
@@ -16,3 +16,8 @@ class BootstrapAuthenticationForm(AuthenticationForm):
                                widget=forms.PasswordInput({
                                    'class': 'form-control',
                                    'placeholder':'Password'}))
+
+
+class UploadFileForm(forms.Form):
+    imageSetId = forms.IntegerField()
+    fileToUpload = forms.FileField()

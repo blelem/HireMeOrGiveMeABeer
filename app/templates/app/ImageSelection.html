@@ -66,6 +66,7 @@
 <div style="display: none;" >
     <form id="imageUploadForm" enctype="multipart/form-data" method="post">
         {% csrf_token %}
+        <input name="imageSetId" type="hidden" value="{{imageSetId}}">
     </form>
 </div>
 
@@ -119,8 +120,8 @@ $('.btn-file :file').on('change', function() {
         reader.onload = function(e) { 
             viewModel.filesToUpload.push({'image_1' : e.target.result });
             var fd = new FormData();
-            fd.append("author", "Shiv Kumar");
-            fd.append("name", "Html 5 File API/FormData");
+            var imgSetId = $("#imageUploadForm > input[name='imgSetId']").val();
+            fd.append("imgSetId", imgSetId);
             fd.append("fileToUpload", fileSelected);
 
             var csrfmiddlewaretoken = $("#imageUploadForm > input[name='csrfmiddlewaretoken']").val();

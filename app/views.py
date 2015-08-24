@@ -9,7 +9,9 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.http import JsonResponse
 from datetime import datetime
-from app.models import InputImages 
+from app.models import InputImages, HostedImage, ImageSet
+
+from app.forms import UploadFileForm
 
 import Alignment2D
 import cv2
@@ -146,6 +148,19 @@ def matchFeatures(request):
 
 def imageUpload(request):
     """Renders the select Image page."""
+
+    form = UploadFileForm(request.POST, request.FILES)
+    if form.is_valid():
+            img = HostedImage(fullResImage=request.FILES['fileToUpload'],
+                      ImageSet=form.imageSetId)
+            img.save()
+            return HttpResponse()
+    else:
+        form = UploadFileForm()
+    return render_to_response('upload.html', {'form': form})
+
+
+
     assert isinstance(request, HttpRequest)
 
 
@@ -161,11 +176,15 @@ def imageSelection(request):
         }
         for image in InputImages.objects.all()]
 
+    set = ImageSet(user = 'Berthier');
+    set.save()
+
     return render(request,
         'app/imageSelection.html',
         context_instance = RequestContext(request,
         {
            'input_image_list' : displayedImages, 
+           'imageSetId' : set.pk
          }));
 
 
