@@ -19,8 +19,8 @@
     <div class="panel-body">
         <div class="row">
             <div class="col-xs-12  ">
-                <!-- Add an image button -->
-                <span class="btn btn-primary btn-file">
+                <!-- "Add" button -->
+                <span class="btn btn-primary btn-file" data-bind="visible: shouldShowAddMoreButton">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                     <input type="file" multiple>
                 </span>
@@ -31,9 +31,17 @@
             <div data-bind="foreach: filesToUpload " class="tnList clearfix">
                 <div class="col-xs-6 col-sm-3 tnHolder ">
                     <a href="#" class="thumbnail">
-                        <img data-bind="attr: { src: image_1 }">
+                        <img data-bind="attr: { src: imgToDisplay }">
                     </a>
+                    <div style="position:absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display:block" data-bind='visible: uploading'>
+                        <i class="fa fa-circle-o-notch fa-spin fa-5x" ></i>
+                    </div>
                 </div>
+            </div>
+            <div class="col-xs-12"  >
+                <button id="uploadButton" class="btn btn-primary" data-bind="visible: shouldShowUploadButton"> <span class="glyphicon glyphicon-upload"></span> Upload</button>
+                <button id="proceedButton" class="btn btn-primary" data-bind="visible: shouldShowProceedButton"> <span class="glyphicon glyphicon-ok"></span> Proceed with these!</button>
+         
             </div>
         </div>
 
@@ -91,6 +99,10 @@ function AppViewModel() {
     self.shouldShowFilesToUpload = ko.computed(function() {
         return (self.filesToUpload().length > 0 );
     }, self);
+    self.shouldShowAddMoreButton = ko.observable(true);
+    self.shouldShowUploadButton = ko.observable(true);
+    self.shouldShowProceedButton = ko.observable(false);
+
 }
 
 // Activates knockout.js
@@ -108,7 +120,7 @@ $('.tnList >').each(function (index) {
     }
 });
 
-// When a file is selected add it to the viewModel 
+// When a file is selected : add it to the viewModel 
 $('.btn-file :file').on('change', function() {
     var input = $(this),
     numFiles = input.get(0).files ? input.get(0).files.length : 1,
@@ -118,50 +130,61 @@ $('.btn-file :file').on('change', function() {
         // Using FileReader to display the image content
         var reader = new FileReader(); 
         reader.onload = function(e) { 
-            viewModel.filesToUpload.push({'image_1' : e.target.result });
-            var fd = new FormData();
-            var imgSetId = $("#imageUploadForm > input[name='imageSetId']").val();
-            fd.append("imageSetId", imgSetId);
-            fd.append("fileToUpload", fileSelected);
-
-            var csrfmiddlewaretoken = $("#imageUploadForm > input[name='csrfmiddlewaretoken']").val();
-            fd.append("csrfmiddlewaretoken", csrfmiddlewaretoken);
-            var xhr = new XMLHttpRequest();
-
-          /* event listners */
-           xhr.addEventListener("load", uploadComplete, false);
-           xhr.addEventListener("error", uploadFailed, false);
-           /* Be sure to change the url below to the url of your upload server side script */
-           xhr.open("POST", "imageUpload");
-           xhr.send(fd);
-
+            viewModel.filesToUpload.push({
+            'imgData' : fileSelected,
+            'imgToDisplay' : e.target.result,
+            'uploading' : ko.observable(false)});
         };
         reader.readAsDataURL(fileSelected);
     });
 });
 
-function uploadProgress(evt) {
-  if (evt.lengthComputable) {
-    var percentComplete = Math.round(evt.loaded * 100 / evt.total);
-    document.getElementById('progressNumber').innerHTML = percentComplete.toString() + '%';
-  }
-  else {
-    document.getElementById('progressNumber').innerHTML = 'unable to compute';
-  }
+$('#uploadButton').click(uploadImages);
+
+// Upload the files to the server          
+
+function uploadImages() {
+    var imgSetId = $("#imageUploadForm > input[name='imageSetId']").val();
+    var csrfmiddlewaretoken = $("#imageUploadForm > input[name='csrfmiddlewaretoken']").val();
+    var imageUploadedCount = 0;
+
+    Array.prototype.forEach.call(viewModel.filesToUpload(), function(imageToUpload) {
+        var fd = new FormData();
+        fd.append("imageSetId", imgSetId);
+        fd.append("fileToUpload", imageToUpload.imgData);
+        fd.append("csrfmiddlewaretoken", csrfmiddlewaretoken);
+        var xhr = new XMLHttpRequest();
+
+        xhr.addEventListener("load", uploadComplete, false);
+        xhr.addEventListener("error", uploadFailed, false);
+        xhr.open("POST", "imageUpload");
+        xhr.send(fd);
+
+        imageToUpload['uploading'](true);
+        viewModel.shouldShowAddMoreButton(false);
+        viewModel.shouldShowUploadButton(false);
+
+        function uploadComplete(evt) {
+             imageToUpload['uploading'](false);
+             imageUploadedCount++;
+             if (imageUploadedCount === viewModel.filesToUpload().length) {
+                 viewModel.shouldShowProceedButton(true);
+             }
+
+        }
+        function uploadFailed(evt) {
+             alert("There was an error attempting to upload the file.");
+        }
+
+        function uploadCanceled(evt) {
+             alert("The upload has been canceled by the user or the browser dropped the connection.");
+        }  
+
+    });
 }
 
-function uploadComplete(evt) {
-  /* This event is raised when the server send back a response */
-  alert(evt.target.responseText);
-}
 
-function uploadFailed(evt) {
-  alert("There was an error attempting to upload the file.");
-}
 
-function uploadCanceled(evt) {
-  alert("The upload has been canceled by the user or the browser dropped the connection.");
-}  
   
  </script>
 {% endblock %}

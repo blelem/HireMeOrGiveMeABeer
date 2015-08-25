@@ -7,7 +7,7 @@ from django.http import HttpRequest
 from django.template import RequestContext
 from django.conf import settings
 from django.conf.urls.static import static
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, HttpResponseServerError
 from datetime import datetime
 from app.models import InputImages, HostedImage, ImageSet
 
@@ -19,8 +19,7 @@ import os
 import uuid
 import numpy as np
 
-controlPanels = list( [
-        { 'panelTemplate'  : 'app/Panels/selectPanel.js', 
+controlPanels = list([{ 'panelTemplate'  : 'app/Panels/selectPanel.js', 
           'displayName'    : 'Alignment Algo', 
           'panelId'        : 'AlignmentAlgoPanel',
           'jsonName'       :  'AlignMethod',
@@ -36,28 +35,24 @@ controlPanels = list( [
           'displayName'    : 'Max distance', 
           'panelId'        : 'MaxDistancePanel',
           'jsonName'       : 'MaxDistance',
-          'content'        : Alignment2D.MaxDistanceRange()  }
-         ] ); 
+          'content'        : Alignment2D.MaxDistanceRange()  }]) 
 
 def home(request):
     """Renders the home page."""
     assert isinstance(request, HttpRequest)
     fail()
-    return render(
-        request,
+    return render(request,
         'app/home.html',
         context_instance = RequestContext(request,
         {
             'title':'Home Page',
             'year':datetime.now().year,
-        })
-    )
+        }))
 
 def about(request):
     """Renders the about page."""
     assert isinstance(request, HttpRequest)
-    return render(
-        request,
+    return render(request,
         'app/about.html',
         context_instance = RequestContext(request,
         {
@@ -69,8 +64,7 @@ def about(request):
 def portfolio(request):
     """Renders the portfolio page."""
     assert isinstance(request, HttpRequest)
-    return render(
-        request,
+    return render(request,
         'app/portfolio.html',
         context_instance = RequestContext(request,
         {
@@ -102,11 +96,11 @@ def merge(request):
     return response
 
     
-def mergeImages(img1, img2, AlignMethod = '', Jacobian = '',  **kwargs):
+def mergeImages(img1, img2, AlignMethod='', Jacobian='',  **kwargs):
    
     (kp1Matches, kp2Matches) = Alignment2D.ExtractFeatures(img1, img2, **kwargs)
   
-    Transform =  Alignment2D.AlignImages(kp1Matches, kp2Matches, AlignMethod, Jacobian) 
+    Transform = Alignment2D.AlignImages(kp1Matches, kp2Matches, AlignMethod, Jacobian) 
 
     #Overlay the two images, showing the detected feature.
     rows,cols,colours = img1.shape
@@ -148,20 +142,17 @@ def matchFeatures(request):
 
 def imageUpload(request):
     """Renders the select Image page."""
+    assert isinstance(request, HttpRequest)
 
     form = UploadFileForm(request.POST, request.FILES)
     if form.is_valid():
-            imageSetToUploadTo = ImageSet.objects.get(pk=form.cleaned_data['imageSetId'])
-            img = HostedImage(fullResImage=request.FILES['fileToUpload'], imageSet=imageSetToUploadTo)
-            img.save()
-            return HttpResponse()
+        imageSetToUploadTo = ImageSet.objects.get(pk=form.cleaned_data['imageSetId'])
+        img = HostedImage(fullResImage = request.FILES['fileToUpload'], imageSet = imageSetToUploadTo)
+        img.save()
+        return HttpResponse()
     else:
         form = UploadFileForm()
-    return render_to_response('upload.html', {'form': form})
-
-
-
-    assert isinstance(request, HttpRequest)
+    return HttpResponseServerError()
 
 
 def imageSelection(request):
@@ -176,7 +167,7 @@ def imageSelection(request):
         }
         for image in InputImages.objects.all()]
 
-    set = ImageSet(user = 'Berthier');
+    set = ImageSet(user = 'Berthier')
     set.save()
 
     return render(request,
@@ -185,7 +176,7 @@ def imageSelection(request):
         {
            'input_image_list' : displayedImages, 
            'imageSetId' : set.pk
-         }));
+         }))
 
 
 

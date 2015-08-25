@@ -2,9 +2,14 @@
 Definition of models.
 """
 
+import StringIO
+import os
+import binascii
 from django.db import models
+from django.core.files.uploadedfile import InMemoryUploadedFile
 import azureImageProvider
 from azure_storage.storage import AzureStorage
+from PIL import Image
 
 azureStorage = AzureStorage()
 
@@ -36,10 +41,35 @@ class ImageSet(models.Model):
 
 
 class HostedImage(models.Model):
-    ''' A table of the images hosted on Azure blob'''
+    ''' Images hosted on an Azure blob'''
 
-    # Table entries
-    fullResImage = models.ImageField(storage=azureStorage)
-   # thumbnailImage = models.ImageField()
-    imageSet = models.ForeignKey(ImageSet);
+    fullResImage = models.ImageField(storage = azureStorage, default = "./default.jpg")
+    thumbnailImage = models.ImageField(storage = azureStorage, default = "./default.jpg")
+    imageSet = models.ForeignKey(ImageSet)
 
+    def __init__(self, **kwargs):
+       ''' Randomize the name of the image, create a thumbnail '''
+
+       #Randomize the name
+       randomString = binascii.b2a_hex(os.urandom(15))
+       os.path.splitext("path_to_file")[0]
+       oldName = kwargs['fullResImage'].name 
+       extension = os.path.splitext(oldName)[1]
+       newName = randomString + extension 
+
+       #Create the thumbnail.
+       size = 256, 256
+
+       thumb = Image.open(kwargs['fullResImage'])
+       thumb.thumbnail(size, Image.ANTIALIAS)   
+       thumb_io = StringIO.StringIO()
+       thumb.save(thumb_io, format='JPEG')
+       thumb_file = InMemoryUploadedFile(thumb_io, None, randomString + '-tn' + '.jpg', 'image/jpeg',
+                                  thumb_io.len, None)
+       
+       #Let the model do its work, now that we have a fullres and a thumbnail image
+       kwargs['fullResImage'].name = newName
+       kwargs['thumbnailImage'] = thumb_file
+       super(HostedImage, self).__init__(**kwargs)
+
+        
