@@ -2,6 +2,11 @@
 Definition of views.
 """
 
+import os
+import uuid
+import numpy as np
+import json
+import cv2
 from django.shortcuts import render
 from django.http import HttpRequest
 from django.template import RequestContext
@@ -10,14 +15,8 @@ from django.conf.urls.static import static
 from django.http import JsonResponse, HttpResponse, HttpResponseServerError
 from datetime import datetime
 from app.models import InputImages, HostedImage, ImageSet
-
 from app.forms import UploadFileForm
-
 import Alignment2D
-import cv2
-import os
-import uuid
-import numpy as np
 
 controlPanels = list([{ 'panelTemplate'  : 'app/Panels/selectPanel.js', 
           'displayName'    : 'Alignment Algo', 
@@ -147,7 +146,7 @@ def imageUpload(request):
     form = UploadFileForm(request.POST, request.FILES)
     if form.is_valid():
         imageSetToUploadTo = ImageSet.objects.get(pk=form.cleaned_data['imageSetId'])
-        img = HostedImage(fullResImage = request.FILES['fileToUpload'], imageSet = imageSetToUploadTo)
+        img = HostedImage.objects.create_HostedImage(request.FILES['fileToUpload'], imageSetToUploadTo)
         img.save()
         return HttpResponse()
     else:
@@ -158,14 +157,13 @@ def imageUpload(request):
 def imageSelection(request):
     """Renders the select Image page."""
     assert isinstance(request, HttpRequest)
-
-    displayedImages = [
+    
+    imageSet = [
         {
-            'thumb1': image.image_url(0, True),
-            'thumb2': image.image_url(1, True),
-            'pk': image.pk
+            'tn': [ image.thumbnailImage.url for image in HostedImage.objects.filter(imageSet=set.pk) ],
+            'pk': set.pk
         }
-        for image in InputImages.objects.all()]
+        for set in ImageSet.objects.all()]
 
     set = ImageSet(user = 'Berthier')
     set.save()
@@ -174,7 +172,7 @@ def imageSelection(request):
         'app/imageSelection.html',
         context_instance = RequestContext(request,
         {
-           'input_image_list' : displayedImages, 
+           'imageSet' : json.dumps(imageSet) ,
            'imageSetId' : set.pk
          }))
 

@@ -39,6 +39,34 @@ class ImageSet(models.Model):
     user = models.CharField(max_length=30) # This is a placeholder, until a proper user model exists.
 
 
+class HostedImageManager(models.Manager):
+    def create_HostedImage(self, fullResImage, imageSet):
+       ''' Randomize the name of the image, create a thumbnail '''
+       
+       #Randomize the name
+       randomString = binascii.b2a_hex(os.urandom(15))
+       os.path.splitext("path_to_file")[0]
+       oldName = fullResImage.name 
+       extension = os.path.splitext(oldName)[1]
+       newName = randomString + extension     
+       fullResImage.name = newName
+
+       #Create the thumbnail.
+       size = 256, 256
+
+       thumb = Image.open(fullResImage)
+       thumb.thumbnail(size, Image.ANTIALIAS)   
+       thumb_io = StringIO.StringIO()
+       thumb.save(thumb_io, format='JPEG')
+       thumb_file = InMemoryUploadedFile(thumb_io, None, randomString + '-tn' + '.jpg', 'image/jpeg',
+                                  thumb_io.len, None)
+       
+       #Create the model entry
+       hostedImage = self.create(fullResImage= fullResImage, 
+                             thumbnailImage = thumb_file,
+                             imageSet = imageSet)
+
+       return hostedImage
 
 class HostedImage(models.Model):
     ''' Images hosted on an Azure blob'''
@@ -46,30 +74,8 @@ class HostedImage(models.Model):
     fullResImage = models.ImageField(storage = azureStorage, default = "./default.jpg")
     thumbnailImage = models.ImageField(storage = azureStorage, default = "./default.jpg")
     imageSet = models.ForeignKey(ImageSet)
+    objects = HostedImageManager()
 
-    def __init__(self, **kwargs):
-       ''' Randomize the name of the image, create a thumbnail '''
-
-       #Randomize the name
-       randomString = binascii.b2a_hex(os.urandom(15))
-       os.path.splitext("path_to_file")[0]
-       oldName = kwargs['fullResImage'].name 
-       extension = os.path.splitext(oldName)[1]
-       newName = randomString + extension 
-
-       #Create the thumbnail.
-       size = 256, 256
-
-       thumb = Image.open(kwargs['fullResImage'])
-       thumb.thumbnail(size, Image.ANTIALIAS)   
-       thumb_io = StringIO.StringIO()
-       thumb.save(thumb_io, format='JPEG')
-       thumb_file = InMemoryUploadedFile(thumb_io, None, randomString + '-tn' + '.jpg', 'image/jpeg',
-                                  thumb_io.len, None)
-       
-       #Let the model do its work, now that we have a fullres and a thumbnail image
-       kwargs['fullResImage'].name = newName
-       kwargs['thumbnailImage'] = thumb_file
-       super(HostedImage, self).__init__(**kwargs)
+    
 
         

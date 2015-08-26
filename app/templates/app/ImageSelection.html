@@ -29,7 +29,7 @@
         <!-- The grid of images to upload -->
         <div class="row" style="margin-top:20px" data-bind="visible: shouldShowFilesToUpload">
             <div data-bind="foreach: filesToUpload " class="tnList clearfix">
-                <div class="col-xs-6 col-sm-3 tnHolder ">
+                <div class="col-xs-6 col-sm-3">
                     <a href="#" class="thumbnail">
                         <img data-bind="attr: { src: imgToDisplay }">
                     </a>
@@ -57,13 +57,15 @@
         <!-- The grid of images available on the server -->
 
         <div class="row">
-            <div data-bind="foreach: availableInputImages" class="tnList clearfix">
-                <div class="col-xs-6 col-sm-3 tnHolder ">
-                    <a href="#" class="thumbnail">
-                        <img data-bind="attr: { src: image_1 }">
-                        <br>
-                        <img data-bind="attr: { src: image_2 }">
-                    </a>
+            <div data-bind="foreach: imageSets" class="tnList">
+                <div class="col-xs-6 col-sm-3">
+                    <div style="content:'';padding-top:100%;width:100%; position:relative; ">
+                        <div data-bind="foreach: tn" class="slideshow" style="position:absolute;top:0%;left:0%;width:100%">
+                            <div>
+                                <img class="img-rounded " data-bind="attr: { src: $data }" style="position:absolute;width:100%;">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -87,13 +89,7 @@
 function AppViewModel() {
 
     var self = this;
-    self.availableInputImages = ko.observableArray([
-        {% for image in input_image_list %}
-            { image_1 : "{{ image.thumb1 }}" , 
-              image_2 : "{{ image.thumb2 }}" ,		
-              pk	  : "{{ image.pk }}"  },		
-        {% endfor %}
-        ]);
+    self.imageSets = ko.observableArray({{imageSet|safe}});
        
     self.filesToUpload = ko.observableArray();
     self.shouldShowFilesToUpload = ko.computed(function() {
@@ -183,7 +179,16 @@ function uploadImages() {
     });
 }
 
-
+// Slideshow animations
+$(".slideshow > div:gt(0)").hide();
+setInterval(function() { 
+    $('.slideshow').each(function(slideshow,element) {
+        $( this ).find('> div:first').fadeOut(1000)
+        .next()
+        .fadeIn(1000)
+        .end()
+        .appendTo($(this)); 
+    }) },  3000); 
 
   
  </script>
