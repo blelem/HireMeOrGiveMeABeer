@@ -140,9 +140,17 @@ def matchFeatures(request):
         }))
 
 def imageUpload(request):
-    """Renders the select Image page."""
+    """Handle POST and GET requests to upload an image to the server."""
     assert isinstance(request, HttpRequest)
 
+    # A request to get a unique ID?
+    if (request.path == '/imageUpload/GetId'):
+        #Create a new entry in the ImageSet table
+        set = ImageSet(user = 'Berthier')
+        set.save()
+        return JsonResponse({'uploadId': set.pk})
+
+    # Handle the file upload request  
     form = UploadFileForm(request.POST, request.FILES)
     if form.is_valid():
         imageSetToUploadTo = ImageSet.objects.get(pk=form.cleaned_data['imageSetId'])
@@ -165,15 +173,17 @@ def imageSelection(request):
         }
         for set in ImageSet.objects.all()]
 
-    set = ImageSet(user = 'Berthier')
-    set.save()
+    #Make sure each set always have at least 2 thumbnails, makes it easier to animate.
+    #If set has only one image, duplicate it.
+    for set in imageSet:
+        if (len(set['tn']) == 1):
+            set['tn'].append(set['tn'][0]);
 
     return render(request,
         'app/imageSelection.html',
         context_instance = RequestContext(request,
         {
-           'imageSet' : json.dumps(imageSet) ,
-           'imageSetId' : set.pk
+           'imageSet' : json.dumps(imageSet) 
          }))
 
 

@@ -138,15 +138,21 @@ $('.btn-file :file').on('change', function() {
 $('#uploadButton').click(uploadImages);
 
 // Upload the files to the server          
-
+   
 function uploadImages() {
-    var imgSetId = $("#imageUploadForm > input[name='imageSetId']").val();
+    // Get an upload ID, before starting to upload 
+    $.get( "imageUpload/GetId", { 'random': Math.random() },  function( data ) {
+        uploadImagesWithUploadId(data.uploadId);
+    })
+}
+
+function uploadImagesWithUploadId(uploadId){
     var csrfmiddlewaretoken = $("#imageUploadForm > input[name='csrfmiddlewaretoken']").val();
     var imageUploadedCount = 0;
 
     Array.prototype.forEach.call(viewModel.filesToUpload(), function(imageToUpload) {
         var fd = new FormData();
-        fd.append("imageSetId", imgSetId);
+        fd.append("imageSetId", uploadId);
         fd.append("fileToUpload", imageToUpload.imgData);
         fd.append("csrfmiddlewaretoken", csrfmiddlewaretoken);
         var xhr = new XMLHttpRequest();
@@ -175,7 +181,6 @@ function uploadImages() {
         function uploadCanceled(evt) {
              alert("The upload has been canceled by the user or the browser dropped the connection.");
         }  
-
     });
 }
 
