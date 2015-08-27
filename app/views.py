@@ -160,7 +160,7 @@ def imageSelection(request):
     
     imageSet = [
         {
-            'tn': [ image.thumbnailImage.url for image in HostedImage.objects.filter(imageSet=set.pk) ],
+            'tn': [ image.squareThumbnailImage.url for image in HostedImage.objects.filter(imageSet=set.pk) ],
             'pk': set.pk
         }
         for set in ImageSet.objects.all()]
