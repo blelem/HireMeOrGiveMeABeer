@@ -32,6 +32,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="app\Alignment2D.py" />
+    <Compile Include="app\CVLoadFromURL.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="app\forms.py" />
     <Compile Include="app\Homography.py" />
     <Compile Include="app\azureImageProvider.py">

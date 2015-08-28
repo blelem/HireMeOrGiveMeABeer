@@ -17,6 +17,7 @@ from datetime import datetime
 from app.models import InputImages, HostedImage, ImageSet
 from app.forms import UploadFileForm
 import Alignment2D
+import CVLoadFromURL
 
 controlPanels = list([{ 'panelTemplate'  : 'app/Panels/selectPanel.js', 
           'displayName'    : 'Alignment Algo', 
@@ -79,14 +80,15 @@ def merge(request):
     filePk = request.GET['inputImagesSelected']
 
     image = InputImages.objects.get(pk=filePk)
-    img1 = cv2.imread(image.image_url(1, False), cv2.CV_LOAD_IMAGE_COLOR)
-    img2 = cv2.imread(image.image.url(2, False), cv2.CV_LOAD_IMAGE_COLOR)
+
+    img1 = CVLoadFromURL.CVLoadFromURL(image.image_url(0, False))
+    img2 = CVLoadFromURL.CVLoadFromURL(image.image_url(1, False))
 
     Canvas1 = mergeImages(img1, img2, **request.GET.dict())
     
     # Save the resulting image
     if not os.path.exists(settings.MEDIA_ROOT):
-	    os.makedirs(settings.MEDIA_ROOT)
+        os.makedirs(settings.MEDIA_ROOT)
 
     filename = "%s.%s" % (uuid.uuid4(), 'jpg')
     ret = cv2.imwrite(os.path.join(settings.MEDIA_ROOT, filename), Canvas1)
