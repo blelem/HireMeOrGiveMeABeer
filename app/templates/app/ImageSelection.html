@@ -41,10 +41,8 @@
             <div class="col-xs-12"  >
                 <button id="uploadButton" class="btn btn-primary" data-bind="visible: shouldShowUploadButton"> <span class="glyphicon glyphicon-upload"></span> Upload</button>
                 <button id="proceedButton" class="btn btn-primary" data-bind="visible: shouldShowProceedButton"> <span class="glyphicon glyphicon-ok"></span> Proceed with these!</button>
-         
             </div>
         </div>
-
     </div>
 </div>
 
@@ -58,7 +56,7 @@
 
         <div class="row">
             <div data-bind="foreach: imageSets" class="tnList">
-                <div class="col-xs-6 col-sm-3">
+                <div class="col-xs-6 col-sm-3" data-bind="click: imageSelected" style="cursor: pointer;">
                     <div style="content:'';padding-top:100%;width:100%; position:relative; ">
                         <div data-bind="foreach: tn" class="slideshow" style="position:absolute;top:0%;left:0%;width:100%">
                             <div>
@@ -136,6 +134,24 @@ $('.btn-file :file').on('change', function() {
 });
 
 $('#uploadButton').click(uploadImages);
+
+function imageSelected(image){
+    // First update the imageSet of the session
+    var csrfmiddlewaretoken = $("#imageUploadForm > input[name='csrfmiddlewaretoken']").val();
+    var fd = new FormData();
+    fd.append("imageSetId", image.pk);
+    fd.append("csrfmiddlewaretoken", csrfmiddlewaretoken);
+    
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "setSessionProperties");
+    xhr.addEventListener("load", ImageSetChangeCompleted, false);
+    xhr.send(fd);
+
+    function ImageSetChangeCompleted(evt) {
+           
+
+        }
+}
 
 // Upload the files to the server          
    

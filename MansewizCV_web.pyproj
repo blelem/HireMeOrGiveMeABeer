@@ -96,6 +96,7 @@
     <Content Include="app\static\app\scripts\jquery-1.11.3.min.js" />
     <Content Include="app\static\app\scripts\knockout-3.3.0.js" />
     <Content Include="app\templates\app\imageSelection.html" />
+    <Content Include="app\templates\app\opencv.png" />
     <Content Include="app\templates\app\Panels\selectPanelTemplate.html" />
     <Content Include="app\templates\app\Panels\selectPanel.js" />
     <Content Include="app\templates\app\Panels\sliderPanel.js" />
@@ -104,6 +105,7 @@
     <None Include="mansewiz - FTP.pubxml" />
     <None Include="mansewiz - Web Deploy %282%29.pubxml" />
     <None Include="mansewiz - FTP %282%29.pubxml" />
+    <Content Include="app\templates\app\python.jpg" />
     <Content Include="wheelhouse\numpy-1.9.2+mkl-cp27-none-win32.whl" />
     <Content Include="wheelhouse\opencv_python-2.4.11-cp27-none-win32.whl" />
     <Content Include="media\testImages\Fit01.jpg" />

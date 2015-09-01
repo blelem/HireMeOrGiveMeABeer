@@ -14,7 +14,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.http import JsonResponse, HttpResponse, HttpResponseServerError
 from datetime import datetime
-from app.models import InputImages, HostedImage, ImageSet
+from app.models import HostedImage, ImageSet
 from app.forms import UploadFileForm
 import Alignment2D
 import CVLoadFromURL
@@ -127,8 +127,11 @@ def mergeImages(img1, img2, AlignMethod='', Jacobian='',  **kwargs):
 def matchFeatures(request):
     """Renders the page."""
     assert isinstance(request, HttpRequest)
-
-    input_image_set = InputImages.objects.get(set_name='DefaultFit')
+    defaultImageSetPK = 53
+    imageSetPK = request.session.get('imageSetId', defaultImageSetPK)
+   
+    input_image_set = ImageSet.objects.get(pk=imageSetPK)
+    images = HostedImage.objects.filter(imageSet = input_image_set)
     publicFilename = os.path.join(settings.MEDIA_URL, 'testImages/FitReferenceResult.jpg')
 
     return render(request,
@@ -136,13 +139,12 @@ def matchFeatures(request):
         context_instance = RequestContext(request,
         {
             'merged_image_url': publicFilename,
-            'input_image_list' : InputImages.objects.all(), 
-            'selected_input_image' : input_image_set,
+            'input_image_list' : images), 
             'control_panels'   :  controlPanels
         }))
 
 def imageUpload(request):
-    """Handle POST and GET requests to upload an image to the server."""
+    """Handles POST requests to upload an image to the server."""
     assert isinstance(request, HttpRequest)
 
     # A request to get a unique ID?
@@ -162,6 +164,16 @@ def imageUpload(request):
     else:
         form = UploadFileForm()
     return HttpResponseServerError()
+
+
+def setSessionProperties(request):
+    """Handles requests to change one or several session properties."""
+    assert isinstance(request, HttpRequest)
+
+    # Saves every items from the request's dictionary in the current session. (except the CSRF token)
+    request.POST.pop('csrfmiddlewaretoken', None) 
+    request.session.update(request.POST.dict())
+    return HttpResponse()
 
 
 def imageSelection(request):
