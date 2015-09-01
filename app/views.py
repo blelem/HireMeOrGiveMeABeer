@@ -139,7 +139,7 @@ def matchFeatures(request):
         context_instance = RequestContext(request,
         {
             'merged_image_url': publicFilename,
-            'input_image_list' : images), 
+            'input_image_list' : images, 
             'control_panels'   :  controlPanels
         }))
 
