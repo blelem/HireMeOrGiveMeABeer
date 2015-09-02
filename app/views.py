@@ -109,13 +109,16 @@ def mergeImages(img1, img2, AlignMethod='', Jacobian='',  **kwargs):
     Canvas2 = np.copy(Canvas1)
 
     finalRows, finalCols, colours = Canvas1.shape
-    M = np.float32([[1,0,0],[0,1,0],[0,0,1]])
+    tx = cols/2; # Translate to the center of the canvas
+    ty = rows/2; 
+    M = np.float32([[1,0,tx],[0,1,ty],[0,0,1]])
 
     img3 = cv2.drawKeypoints(img1, kp1Matches,color=(0,0,255))
-    cv2.warpPerspective(img3, M,(finalCols, finalRows), Canvas1)
-
+    cv2.warpPerspective(img3, M, (finalCols, finalRows), Canvas1)
+    
+    finalTransform = np.dot(M, Transform) ; # Translate to the center of the canvas
     img2 = cv2.drawKeypoints(img2, kp2Matches,color=(255,0,0))
-    cv2.warpPerspective(img2, Transform,(finalCols, finalRows), Canvas2, borderMode=cv2.BORDER_TRANSPARENT)
+    cv2.warpPerspective(img2, finalTransform, (finalCols, finalRows), Canvas2, borderMode=cv2.BORDER_TRANSPARENT)
 
     alpha = 0.5
     beta = (1.0 - alpha)

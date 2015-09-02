@@ -65,7 +65,7 @@
                              </div>
                         </div>
                     </div>
-                    <span class="glyphicon glyphicon-check" aria-hidden="true" style="color:green;font-size:40px;position:absolute; left: 0%; top: 0%;  display:block"></span>
+                    <span data-bind="visible: shouldShowSelected" class="glyphicon glyphicon-check" aria-hidden="true" style="color:green;font-size:40px;position:absolute; left: 0%; top: 0%;  display:block"></span>
                 </div>
             </div>
         </div>
@@ -90,6 +90,7 @@ function AppViewModel() {
 
     var self = this;
     self.imageSets = ko.observableArray({{imageSet|safe}});
+    self.imageSets().forEach( function (imageSet){imageSet.shouldShowSelected = ko.observable(false);} );
        
     self.filesToUpload = ko.observableArray();
     self.shouldShowFilesToUpload = ko.computed(function() {
@@ -138,7 +139,7 @@ $('.btn-file :file').on('change', function() {
 $('#uploadButton').click(uploadImages);
 
 function imageSelected(image){
-   
+    image.shouldShowSelected(true);
 
     // First update the imageSet of the session
     var csrfmiddlewaretoken = $("#imageUploadForm > input[name='csrfmiddlewaretoken']").val();
@@ -153,7 +154,6 @@ function imageSelected(image){
 
     function ImageSetChangeCompleted(evt) {
          window.history.back();
-
         }
 }
 
