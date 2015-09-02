@@ -36,10 +36,10 @@
 
                 <div class="row parameter-area-row-sourceimages">
                     <a href="#" class="thumbnail col-xs-6 col-md-6">
-                        <img data-bind="attr: { src: selectedInputImages().image_1 }">
+                        <img data-bind="attr: { src: InputImages().thumbnails[0] }">
                     </a>
                     <a href="#" class="thumbnail col-xs-6 col-md-6">
-                        <img data-bind="attr: { src: selectedInputImages().image_2 }">
+                        <img data-bind="attr: { src: InputImages().thumbnails[1]}">
                     </a>
                 </div>
 
@@ -58,9 +58,9 @@
 
     <div class="result-area-container col-xs-6">
         <div class="result-area">
-            <div class="containerHeaderText" style="display:block">Results</div>
+            <div class="containerHeaderText" style="display:block">Result</div>
 
-            <div id="MergedImage" style="padding-top:32px">
+            <div id="MergedImage" style="padding-top:32px" data-bind="visible: shouldShowMergedImage">
                 <div class="parent">
                     <div class="panzoom">
                         <img id="panzoom-img" data-bind="attr: { src: mergedImageUrl() }" style="width:100%; " />
@@ -108,10 +108,11 @@
     $('#changeImageSet').click(function(){window.location = "./imageSelection"; });
 
 	function DoMerge() {
-		var jsonData = { inputImagesSelected : viewModel.selectedInputImages().pk };
+		var jsonData = { ImageSetPK : viewModel.InputImages().pk };
         viewModel.panelsVM.forEach( function(elem) { $.extend( jsonData, elem.selectedValueAsJSON() ) }); 
         $('#panzoom-img').fadeTo( "fast", 0.4 );
         $('#panzoom-img-spinner').show();
+        viewModel.shouldShowMergedImage(true);
 		$.get("/matchFeatures/merge", jsonData, function(returnedData) {
 			viewModel.mergedImageUrl(returnedData.mergedImageUrl);    
             $('#panzoom-img').fadeTo( "fast", 1.0);
@@ -132,23 +133,18 @@
         self.panelsVM = [];
 		self.jsonData = [];
         self.showMergeButton = ko.observable(true);
-		
-	    self.selectInputImages = function(inputImages) {
-             self.selectedInputImages(inputImages);
-			 $("#imageSelectionGrid").attr("class","collapse");
-        }
+        self.shouldShowMergedImage = ko.observable(false);
 
-	    self.availableInputImages = ko.observableArray([
-			{% for image_set in input_image_list %}
-				{ image_1 : "{{ image_set.image_1.url }}" , 
-				  image_2 : "{{ image_set.image_2.url }}" ,		
-				  pk	  : "{{ image_set.pk }}"  },		
-			{% endfor %}
-		]);
-		self.selectedInputImages =  ko.observable(self.availableInputImages()[0]);
-        self.selectedInputImages.subscribe(oneOfThePanelValueChanged);
-
-	    {% for panel in control_panels %}
+	    self.InputImages = ko.observable( {
+            thumbnails: [
+			{% for image in imageSet %}
+                        "{{image.thumbnailImage.url}}",
+            {% endfor %}	
+            ],	
+			pk	  : "{{ imageSetPK }}"  }	
+                 
+		);
+		{% for panel in control_panels %}
            {%if panel.panelTemplate %}
                 var panelViewmodel = {% include panel.panelTemplate with panel=panel %} ();
                 self.{{panel.jsonName}} = panelViewmodel; // Add to the global viewmodel.
@@ -157,7 +153,7 @@
            {% endif %}
         {% endfor %}
 
-		self.mergedImageUrl = ko.observable("{{ merged_image_url }}")
+		self.mergedImageUrl = ko.observable();
 	}
 
 	// Activates knockout.js

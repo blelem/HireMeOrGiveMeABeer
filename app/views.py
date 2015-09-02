@@ -77,12 +77,12 @@ def portfolio(request):
 
 def merge(request):
     assert isinstance(request, HttpRequest)
-    filePk = request.GET['inputImagesSelected']
+    imageSetPK = request.GET['ImageSetPK']
+    imageSet = ImageSet.objects.get(pk=imageSetPK)
+    images = HostedImage.objects.filter(imageSet = imageSet)
 
-    image = InputImages.objects.get(pk=filePk)
-
-    img1 = CVLoadFromURL.CVLoadFromURL(image.image_url(0, False))
-    img2 = CVLoadFromURL.CVLoadFromURL(image.image_url(1, False))
+    img1 = CVLoadFromURL.CVLoadFromURL(images[0].fullResImage.url)
+    img2 = CVLoadFromURL.CVLoadFromURL(images[1].fullResImage.url)
 
     Canvas1 = mergeImages(img1, img2, **request.GET.dict())
     
@@ -139,7 +139,8 @@ def matchFeatures(request):
         context_instance = RequestContext(request,
         {
             'merged_image_url': publicFilename,
-            'input_image_list' : images, 
+            'imageSet'         : images, 
+            'imageSetPK'       : imageSetPK,
             'control_panels'   :  controlPanels
         }))
 
