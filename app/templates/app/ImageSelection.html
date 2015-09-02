@@ -61,9 +61,11 @@
                         <div data-bind="foreach: tn" class="slideshow" style="position:absolute;top:0%;left:0%;width:100%">
                             <div>
                                 <img class="img-rounded " data-bind="attr: { src: $data }" style="position:absolute;width:100%;">
-                            </div>
+                                 
+                             </div>
                         </div>
                     </div>
+                    <span class="glyphicon glyphicon-check" aria-hidden="true" style="color:green;font-size:40px;position:absolute; left: 0%; top: 0%;  display:block"></span>
                 </div>
             </div>
         </div>
@@ -136,6 +138,8 @@ $('.btn-file :file').on('change', function() {
 $('#uploadButton').click(uploadImages);
 
 function imageSelected(image){
+   
+
     // First update the imageSet of the session
     var csrfmiddlewaretoken = $("#imageUploadForm > input[name='csrfmiddlewaretoken']").val();
     var fd = new FormData();
@@ -148,7 +152,7 @@ function imageSelected(image){
     xhr.send(fd);
 
     function ImageSetChangeCompleted(evt) {
-           
+         window.history.back();
 
         }
 }
