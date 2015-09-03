@@ -54,9 +54,9 @@
 
         <!-- The grid of images available on the server -->
 
-        <div class="row">
+        <div class="row" >
             <div data-bind="foreach: imageSets" class="tnList">
-                <div class="col-xs-6 col-sm-3" data-bind="click: imageSelected" style="cursor: pointer;">
+                <div class="col-xs-6 col-sm-3" data-bind="click: imageSelected" style="cursor: pointer;margin-top:20px;">
                     <div style="content:'';padding-top:100%;width:100%; position:relative; ">
                         <div data-bind="foreach: tn" class="slideshow" style="position:absolute;top:0%;left:0%;width:100%">
                             <div>
@@ -154,7 +154,7 @@ function imageSelected(image){
 
     function ImageSetChangeCompleted(evt) {
          window.history.back();
-        }
+    }
 }
 
 // Upload the files to the server          
@@ -205,15 +205,27 @@ function uploadImagesWithUploadId(uploadId){
 }
 
 // Slideshow animations
-$(".slideshow > div:gt(0)").hide();
-setInterval(function() { 
-    $('.slideshow').each(function(slideshow,element) {
-        $( this ).find('> div:first').fadeOut(1000)
+function setAnimation(element) {
+  var self = element;
+  setInterval(function() { 
+        $(self).find('> div:first').fadeOut(1000)
         .next()
         .fadeIn(1000)
         .end()
-        .appendTo($(this)); 
-    }) },  3000); 
+        .appendTo($(self)); 
+    }, 3000 );
+}
+
+delay = 0;
+$('.slideshow').each(function(slideshow,element) {
+    $( this ).find('> div:gt(0)').hide();
+    var self = this;
+    setTimeout(function() { setAnimation(self) }, delay);
+    delay += 100;
+ });
+
+
+   
 
   
  </script>
