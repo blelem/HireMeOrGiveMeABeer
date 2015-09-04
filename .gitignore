@@ -22,6 +22,8 @@ __pycache__/
 #/env/
 /env/pip-selfcheck.json
 /app/static/app/scripts/_references.js
+/common/static/scripts/_references.js
+
 
 # Media files
 /media/
@@ -44,4 +46,5 @@ $RECYCLE.BIN/
 
 # Mac desktop service store files
 .DS_Store
+
 
