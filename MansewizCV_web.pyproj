@@ -67,6 +67,7 @@
     <Folder Include="wheelhouse\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="app\static\app\content\animate.min.css" />
     <Content Include="app\static\app\content\bootstrap-slider.css" />
     <Content Include="app\static\app\content\bootstrap-slider.min.css" />
     <Content Include="app\static\app\img\banner-bg.jpg" />
@@ -93,6 +94,7 @@
     <Content Include="app\static\app\scripts\bootstrap-slider.min.js" />
     <Content Include="app\static\app\scripts\jquery-1.11.3.js" />
     <Content Include="app\static\app\scripts\jquery-1.11.3.min.js" />
+    <Content Include="app\static\app\scripts\jquery.appear.js" />
     <Content Include="app\static\app\scripts\knockout-3.3.0.js" />
     <Content Include="app\templates\app\imageSelection.html" />
     <Content Include="app\templates\app\Panels\selectPanelTemplate.html" />

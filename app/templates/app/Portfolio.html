@@ -1,12 +1,14 @@
 {% extends "app/layout.html" %}
-{% block content %}
 {% load staticfiles %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{% static 'app/content/animate.min.css'%}" />
+{% endblock %}
+{% block content %}
 
  <!-- Header -->
     <a name="about"></a>
     <div class="intro-header">
         <div class="container">
-
             <div class="row">
                 <div class="col-lg-12">
                     <div class="intro">
@@ -39,7 +41,7 @@
 
 	<a  name="services"></a>
    
-    <div class="content-section-a">
+    <div class="content-section-a" >
         <div class="container">
             <div class="row">
                 <div class="col-lg-5 col-sm-6 col-xs-12  ">
@@ -94,7 +96,7 @@
     </div>
     <!-- /.content-section-b -->
 
-   <div class="content-section-a">
+   <div class="content-section-a" >
         <div class="container">
             <div class="row">
                 <div class="col-lg-5 col-sm-6 col-xs-12" >
@@ -197,4 +199,22 @@
     </div>
     <!-- /.content-section-b -->
 
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'app/scripts/jquery.appear.js' %}"></script>
+
+<script>
+    $('.content-section-b').appear({ force_process: true, interval:20});
+    $('.content-section-b').on('appear', function (event, $all_appeared_elements) {
+        // this element is now inside browser viewport
+        $(this).addClass('animated bounceInLeft');
+    });
+    $('.content-section-a').appear({ force_process: true, interval: 20 });
+    $('.content-section-a').on('appear', function (event, $all_appeared_elements) {
+        // this element is now inside browser viewport
+        $(this).addClass('animated bounceInRight');
+    });
+
+</script>
 {% endblock %}

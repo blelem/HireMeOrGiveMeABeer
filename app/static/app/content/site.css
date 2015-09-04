@@ -124,3 +124,7 @@ input[type="checkbox"].input-validation-error {
 .spacer{
     padding-top:10px;
 }
+
+.content-section-a, .content-section-b {
+    animation-duration:2s;
+}
