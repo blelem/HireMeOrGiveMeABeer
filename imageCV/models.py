@@ -7,7 +7,6 @@ import os
 import binascii
 from django.db import models
 from django.core.files.uploadedfile import InMemoryUploadedFile
-import azureImageProvider
 from azure_storage.storage import AzureStorage
 from PIL import Image, ImageOps
 
