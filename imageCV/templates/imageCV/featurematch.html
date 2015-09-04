@@ -1,0 +1,165 @@
+{% extends "imageCV/layout.html" %}
+{% load staticfiles %}
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{% static 'imageCV/content/bootstrap-slider.min.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1>Merge two images</h1>
+    <p>
+        A simple demo of doing maths and using OpenCV in the cloud. Merge two images, while interractively selecting the parameters of the merge algorithm.
+    </p>
+</div>
+
+<div class="work-area-container row" style="margin-right:0px;margin-left:0px">
+    <div class="parameter-area-container col-xs-6">
+        <div class="parameter-area">
+            <div style="overflow:auto;">
+                <div class="containerHeaderText">Parameters</div>
+                <div class="text-center">
+                    <button style="float:right" class="btn btn-primary btn-xs" type="button" onclick="DoMerge()" data-bind="visible: showMergeButton">
+                        Merge >>
+                    </button>
+                </div>
+            </div>
+
+            <div class="spacer"></div>
+            <div class="parameter-box">
+                <div class="spacer"></div>
+                <h5>
+                    Source Image Set
+                    <button id="changeImageSet" style="float:right" class="btn btn-primary btn-xs" type="button">
+                        Change
+                    </button>
+                </h5>
+
+                <div class="row parameter-area-row-sourceimages">
+                    <a href="#" class="thumbnail col-xs-6 col-md-6">
+                        <img data-bind="attr: { src: InputImages().thumbnails[0] }">
+                    </a>
+                    <a href="#" class="thumbnail col-xs-6 col-md-6">
+                        <img data-bind="attr: { src: InputImages().thumbnails[1]}">
+                    </a>
+                </div>
+
+                <h5>Parameters</h5>
+                <div class="row parameter-area-row-parameters">
+                    {% for panel in control_panels %}
+                    {%if panel.panelId %}
+                    <div class="col-xs-12 col-sm-4" id="{{panel.panelId}}"></div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+                <div class="spacer"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="result-area-container col-xs-6">
+        <div class="result-area">
+            <div class="containerHeaderText" style="display:block">Result</div>
+
+            <div id="MergedImage" style="padding-top:32px" data-bind="visible: shouldShowMergedImage">
+                <div class="parent">
+                    <div class="panzoom">
+                        <img id="panzoom-img" data-bind="attr: { src: mergedImageUrl() }" style="width:100%; " />
+                        <div id="panzoom-img-spinner" style="position:absolute; left: 50%;top: 50%; transform: translate(-50%, -50%); display:none">
+                            <i class="fa fa-circle-o-notch fa-spin fa-5x"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <button class="zoom-in">Zoom In</button>
+                    <button class="zoom-out">Zoom Out</button>
+                    <button class="reset">Reset</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+<p>
+    Built with:
+    <img class="thumbnail-icons" src="{% static 'imageCV/img/openCV.png' %}" />
+    <img class="thumbnail-icons" src="{% static 'imageCV/img/django.png' %}" />
+    <img class="thumbnail-icons" style="padding-left:0px;" src="{% static 'imageCV/img/scipy_logo.png' %}" />
+    <img class="thumbnail-icons" src="{% static 'imageCV/img/python.jpg' %}" />
+</p>
+{% endblock %}
+
+{% block scripts %}
+
+<script src="{% static 'scripts/jquery.panzoom.min.js' %}"></script>
+<script src="{% static 'scripts/bootstrap-slider.min.js' %}"></script>
+
+<script>
+
+     $('.panzoom').panzoom({
+            $zoomIn: $(".zoom-in"),
+            $zoomOut: $(".zoom-out"),
+            $zoomRange: $(".zoom-range"),
+            $reset: $(".reset")
+          });
+	$('.zoom-in').click( function() {$('.panzoom').panzoom("enable");});
+	$('.panzoom').panzoom("disable");
+    $('#changeImageSet').click(function(){window.location = "./imageSelection"; });
+
+	function DoMerge() {
+		var jsonData = { ImageSetPK : viewModel.InputImages().pk };
+        viewModel.panelsVM.forEach( function(elem) { $.extend( jsonData, elem.selectedValueAsJSON() ) }); 
+        $('#panzoom-img').fadeTo( "fast", 0.4 );
+        $('#panzoom-img-spinner').show();
+        viewModel.shouldShowMergedImage(true);
+		$.get("/matchFeatures/merge", jsonData, function(returnedData) {
+			viewModel.mergedImageUrl(returnedData.mergedImageUrl);    
+            $('#panzoom-img').fadeTo( "fast", 1.0);
+            $('#panzoom-img-spinner').hide();
+            viewModel.showMergeButton(false);
+		})
+	}
+
+	// KO viewmodel
+	function AppViewModel() {
+
+        function oneOfThePanelValueChanged()
+        {
+             self.showMergeButton(true);
+        }
+
+		var self = this;
+        self.panelsVM = [];
+		self.jsonData = [];
+        self.showMergeButton = ko.observable(true);
+        self.shouldShowMergedImage = ko.observable(false);
+
+	    self.InputImages = ko.observable( {
+            thumbnails: [
+			{% for image in imageSet %}
+                        "{{image.thumbnailImage.url}}",
+            {% endfor %}	
+            ],	
+			pk	  : "{{ imageSetPK }}"  }	
+                 
+		);
+		{% for panel in control_panels %}
+           {%if panel.panelTemplate %}
+                var panelViewmodel = {% include panel.panelTemplate with panel=panel %} ();
+                self.{{panel.jsonName}} = panelViewmodel; // Add to the global viewmodel.
+                self.panelsVM.push(panelViewmodel);
+                panelViewmodel.subscribeValueChanged(oneOfThePanelValueChanged);
+           {% endif %}
+        {% endfor %}
+
+		self.mergedImageUrl = ko.observable();
+	}
+
+	// Activates knockout.js
+	viewModel = new AppViewModel();
+	ko.applyBindings(viewModel);
+
+</script>
+
+{% endblock %}

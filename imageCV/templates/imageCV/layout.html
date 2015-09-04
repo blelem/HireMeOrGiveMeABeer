@@ -1,0 +1,61 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }} - Berthier Lemieux</title>
+    {% load staticfiles %}
+
+     <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'content/bootstrap.min.css' %}" />
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'content/site.css' %}" />
+
+    <script src="{% static 'scripts/modernizr-2.6.2.js' %}"></script>
+
+    <!-- Custom Fonts -->
+    <link rel="stylesheet" type="text/css" href="{% static 'font-awesome/css/font-awesome.min.css' %}" >
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" >
+
+    {% block stylesheets %}{% endblock %}
+
+</head>
+
+<body>
+    <div class="navbar navbar-default navbar-fixed-top topnav">
+        <div class="container  topnav">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="/" class="navbar-brand">Berthier Lemieux</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right"> 
+                    <li><a href="{% url 'about' %}">About Me</a></li>
+                    <li><a href="{% url 'portfolio' %}">Portfolio</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="container body-content">
+{% block content %}{% endblock %}
+        <hr/>
+        <footer>
+            {% block footer %}{% endblock %}
+            <p>{{ year }} - Berthier Lemieux</p>
+        </footer>
+    </div>
+
+    <script src="{% static 'scripts/jquery-1.11.3.js' %}"></script>
+    <script src="{% static 'scripts/bootstrap.js' %}"></script>
+    <script src="{% static 'scripts/respond.js' %}"></script>
+    <script src="{% static 'imageCV/scripts/knockout-3.3.0.js' %}"></script>
+{% block scripts %}{% endblock %}
+
+</body>
+</html>

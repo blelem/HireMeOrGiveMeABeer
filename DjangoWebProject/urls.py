@@ -6,7 +6,7 @@ from datetime import datetime
 from django.conf.urls import patterns, url
 from django.conf import settings
 from django.conf.urls.static import static
-from app.forms import BootstrapAuthenticationForm
+from portfolio.forms import BootstrapAuthenticationForm
 
 # Uncomment the next lines to enable the admin:
 # from django.conf.urls import include
@@ -15,18 +15,19 @@ from app.forms import BootstrapAuthenticationForm
 
 urlpatterns = patterns('',
     # Examples:
-    url(r'^$', 'app.views.about', name='about'),
-    url(r'^matchFeatures$', 'app.views.matchFeatures', name='matchFeatures'),
-    url(r'^matchFeatures/merge$', 'app.views.merge', name='merge'),
-    url(r'^about', 'app.views.about', name='about'),
-    url(r'^portfolio', 'app.views.portfolio', name='portfolio'),
-    url(r'^imageSelection', 'app.views.imageSelection'),
-    url(r'^imageUpload', 'app.views.imageUpload'),
-    url(r'^setSessionProperties$', 'app.views.setSessionProperties'),
+    url(r'^$', 'portfolio.views.about', name='about'),
+    url(r'^about', 'portfolio.views.about', name='about'),
+    url(r'^portfolio', 'portfolio.views.portfolio', name='portfolio'),
+    
+    url(r'^matchFeatures$', 'imageCV.views.matchFeatures', name='matchFeatures'),
+    url(r'^matchFeatures/merge$', 'imageCV.views.merge', name='merge'),
+    url(r'^imageSelection', 'imageCV.views.imageSelection'),
+    url(r'^imageUpload', 'imageCV.views.imageUpload'),
+    url(r'^setSessionProperties$', 'imageCV.views.setSessionProperties'),
     url(r'^login/$',
         'django.contrib.auth.views.login',
         {
-            'template_name': 'app/login.html',
+            'template_name': 'portfolio/login.html',
             'authentication_form': BootstrapAuthenticationForm,
             'extra_context':
             {

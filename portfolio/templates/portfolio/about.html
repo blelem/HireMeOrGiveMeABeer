@@ -1,0 +1,65 @@
+{% extends "portfolio/layout.html" %}
+{% block content %}
+{% load staticfiles %}
+
+ <!-- Header -->
+    <a name="about"></a>
+    <div class="intro-header">
+        <div class="container">
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="intro">
+                        <h1>Berthier Lemieux</h1>
+                        <h3>SW developer</h3>
+                        <hr class="intro-divider">
+                        <ul class="list-inline intro-social-buttons">
+                            <li>
+                                <a href="http://github.com/blelem" class="btn btn-default btn-lg"><i class="fa fa-github fa-fw"></i> <span class="network-name">Github</span></a>
+                            </li>
+                            <li>
+                                <a href="http://stackoverflow.com/users/867248/berthier-lemieux?tab=topactivity" class="btn btn-default btn-lg"><i class="fa fa-stack-overflow fa-fw"></i> <span class="network-name">Stack overflow</span></a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/berthierlemieux" class="btn btn-default btn-lg"><i class="fa fa-linkedin fa-fw"></i> <span class="network-name">Linkedin</span></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- /.container -->
+
+    </div>
+    <!-- /.intro-header -->
+
+
+    <!-- Page Content -->
+
+	<a  name="services"></a>
+    <div class="content-section-a">
+
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-7 col-sm-6">
+                    <hr class="section-heading-spacer">
+                    <div class="clearfix"></div>
+                    <h2 class="section-heading">About me:</h2>
+                    <p class="lead"> Expert in Windows Phone technologies (Silverlight and Windows Runtime, C# and C++). Home projects development using Django, Azure, Javascript, Python, OpenCV, Kinect, and whatever gets the work done.  
+                        A special interest in Machine learning. 
+                              </p>
+                </div>
+                <div class="col-lg-3 col-lg-offset-1 col-sm-3">
+                    <img class="img-responsive" src="{% static 'portfolio/img/berthier.jpg' %}" alt="" />
+                </div>
+            </div>
+
+        </div>
+        <!-- /.container -->
+
+    </div>
+    <!-- /.content-section-a -->
+
+
+{% endblock %}
