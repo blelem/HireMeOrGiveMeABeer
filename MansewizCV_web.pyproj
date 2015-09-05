@@ -78,8 +78,6 @@
     <Folder Include="imageCV\templates\" />
     <Folder Include="imageCV\templates\imageCV\" />
     <Folder Include="imageCV\templates\imageCV\Panels\" />
-    <Folder Include="media\" />
-    <Folder Include="media\testImages\" />
     <Folder Include="portfolio\" />
     <Folder Include="portfolio\migrations\" />
     <Folder Include="portfolio\static\" />
@@ -156,12 +154,6 @@
     <Content Include="common\static\scripts\modernizr-2.6.2.js" />
     <Content Include="common\static\scripts\respond.js" />
     <Content Include="common\static\scripts\respond.min.js" />
-    <Content Include="imageCV\Algorithms\Alignment2D.pyc" />
-    <Content Include="imageCV\Algorithms\Homography.pyc" />
-    <Content Include="imageCV\Algorithms\Similarity.pyc" />
-    <Content Include="imageCV\Algorithms\Translation.pyc" />
-    <Content Include="imageCV\forms.pyc" />
-    <Content Include="imageCV\models.pyc" />
     <Content Include="imageCV\static\imageCV\content\bootstrap-slider.css" />
     <Content Include="imageCV\static\imageCV\content\bootstrap-slider.min.css" />
     <Content Include="imageCV\static\imageCV\img\django.png" />
@@ -179,8 +171,6 @@
     <Content Include="imageCV\templates\imageCV\Panels\selectPanelTemplate.html" />
     <Content Include="imageCV\templates\imageCV\Panels\sliderPanel.js" />
     <Content Include="imageCV\templates\imageCV\Panels\sliderPanelTemplate.html" />
-    <Content Include="imageCV\views.pyc" />
-    <Content Include="imageCV\__init__.pyc" />
     <Content Include="portfolio\static\portfolio\content\animate.min.css" />
     <Content Include="portfolio\static\portfolio\content\landing-page.css" />
     <Content Include="portfolio\static\portfolio\img\Berthier.jpg" />
@@ -209,11 +199,6 @@
     <Content Include="portfolio\templates\portfolio\Portfolio.html" />
     <Content Include="wheelhouse\numpy-1.9.2+mkl-cp27-none-win32.whl" />
     <Content Include="wheelhouse\opencv_python-2.4.11-cp27-none-win32.whl" />
-    <Content Include="media\testImages\Fit01.jpg" />
-    <Content Include="media\testImages\Fit02.jpg" />
-    <Content Include="media\testImages\Fit03.jpg" />
-    <Content Include="media\testImages\Oslo_Panorama_1.jpg" />
-    <Content Include="media\testImages\Oslo_Panorama_2.jpg" />
     <Content Include="db.sqlite3" />
     <Content Include="requirements.txt" />
   </ItemGroup>
