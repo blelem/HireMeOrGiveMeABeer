@@ -31,14 +31,15 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="imageCV\Alignment2D.py" />
-    <Compile Include="imageCV\CVLoadFromURL.py" />
+    <Compile Include="imageCV\Algorithms\Alignment2D.py" />
+    <Compile Include="imageCV\Algorithms\CVLoadFromURL.py" />
+    <Compile Include="imageCV\Algorithms\Homography.py" />
+    <Compile Include="imageCV\Algorithms\Similarity.py" />
+    <Compile Include="imageCV\Algorithms\Translation.py" />
+    <Compile Include="imageCV\Algorithms\__init__.py" />
     <Compile Include="imageCV\forms.py" />
-    <Compile Include="imageCV\Homography.py" />
     <Compile Include="imageCV\models.py" />
-    <Compile Include="imageCV\Similarity.py" />
     <Compile Include="imageCV\tests.py" />
-    <Compile Include="imageCV\Translation.py" />
     <Compile Include="imageCV\views.py" />
     <Compile Include="imageCV\__init__.py" />
     <Compile Include="manage.py" />
@@ -67,6 +68,7 @@
     <Folder Include="common\static\scripts\" />
     <Folder Include="DjangoWebProject\" />
     <Folder Include="imageCV\" />
+    <Folder Include="imageCV\Algorithms\" />
     <Folder Include="imageCV\migrations\" />
     <Folder Include="imageCV\static\" />
     <Folder Include="imageCV\static\imageCV\" />
@@ -154,12 +156,12 @@
     <Content Include="common\static\scripts\modernizr-2.6.2.js" />
     <Content Include="common\static\scripts\respond.js" />
     <Content Include="common\static\scripts\respond.min.js" />
-    <Content Include="imageCV\Alignment2D.pyc" />
-    <Content Include="imageCV\CVLoadFromURL.pyc" />
+    <Content Include="imageCV\Algorithms\Alignment2D.pyc" />
+    <Content Include="imageCV\Algorithms\Homography.pyc" />
+    <Content Include="imageCV\Algorithms\Similarity.pyc" />
+    <Content Include="imageCV\Algorithms\Translation.pyc" />
     <Content Include="imageCV\forms.pyc" />
-    <Content Include="imageCV\Homography.pyc" />
     <Content Include="imageCV\models.pyc" />
-    <Content Include="imageCV\Similarity.pyc" />
     <Content Include="imageCV\static\imageCV\content\bootstrap-slider.css" />
     <Content Include="imageCV\static\imageCV\content\bootstrap-slider.min.css" />
     <Content Include="imageCV\static\imageCV\img\django.png" />
@@ -177,7 +179,6 @@
     <Content Include="imageCV\templates\imageCV\Panels\selectPanelTemplate.html" />
     <Content Include="imageCV\templates\imageCV\Panels\sliderPanel.js" />
     <Content Include="imageCV\templates\imageCV\Panels\sliderPanelTemplate.html" />
-    <Content Include="imageCV\Translation.pyc" />
     <Content Include="imageCV\views.pyc" />
     <Content Include="imageCV\__init__.pyc" />
     <Content Include="portfolio\static\portfolio\content\animate.min.css" />

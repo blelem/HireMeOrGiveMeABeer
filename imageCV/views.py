@@ -16,8 +16,8 @@ from django.http import JsonResponse, HttpResponse, HttpResponseServerError
 from datetime import datetime
 from imageCV.models import HostedImage, ImageSet
 from imageCV.forms import UploadFileForm
-import Alignment2D
-import CVLoadFromURL
+from imageCV.Algorithms import Alignment2D
+from imageCV.Algorithms import CVLoadFromURL
 
 controlPanels = list([{ 'panelTemplate'  : 'imageCV/Panels/selectPanel.js', 
           'displayName'    : 'Alignment Algo', 
