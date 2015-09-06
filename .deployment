@@ -1,0 +1,4 @@
+[config]
+project = .
+
+command = deploy.cmd
