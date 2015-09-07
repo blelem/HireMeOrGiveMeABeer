@@ -41,7 +41,7 @@
 
 	<a  name="services"></a>
    
-    <div class="content-section-a" >
+    <div class="content-section-a hide-before-animation" >
         <div class="container">
             <div class="row">
                 <div class="col-lg-5 col-sm-6 col-xs-12  ">
@@ -70,7 +70,7 @@
     </div>
     <!-- /.content-section-a -->
 
-  <div class="content-section-b">
+  <div class="content-section-b hide-before-animation">
         <div class="container">
             <div class="row">        
                 <div class="col-xs-12 col-sm-6 col-sm-push-6     " >    
@@ -96,7 +96,7 @@
     </div>
     <!-- /.content-section-b -->
 
-   <div class="content-section-a" >
+   <div class="content-section-a hide-before-animation" >
         <div class="container">
             <div class="row">
                 <div class="col-lg-5 col-sm-6 col-xs-12" >
@@ -122,7 +122,7 @@
     <!-- /.content-section-a -->
 
 
-   <div class="content-section-b">
+   <div class="content-section-b hide-before-animation">
         <div class="container">
             <div class="row">        
                 <div class="col-xs-12 col-sm-6 col-sm-push-6   " >
@@ -151,7 +151,7 @@
     </div>
     <!-- /.content-section-b -->
 
-   <div class="content-section-a">
+   <div class="content-section-a hide-before-animation">
         <div class="container">
             <div class="row">
                 <div class="col-lg-5 col-sm-6 col-xs-12" style="padding-top:50px;" >
@@ -177,7 +177,7 @@
     </div>
     <!-- /.content-section-a -->
 
-   <div class="content-section-b">
+   <div class="content-section-b hide-before-animation">
         <div class="container">
              <div class="col-xs-12 col-sm-6 col-sm-push-6 col-lg-5 col-lg-offset-1" style="padding-top:50px;" >
                     <a href="https://msdn.microsoft.com/en-us/library/dn859593.aspx">
@@ -205,14 +205,16 @@
 <script src="{% static 'portfolio/scripts/jquery.appear.js' %}"></script>
 
 <script>
-    $('.content-section-b').appear({ force_process: true, interval:20});
+    $('.content-section-b').appear({ force_process: true, interval: 20 });
     $('.content-section-b').on('appear', function (event, $all_appeared_elements) {
         // this element is now inside browser viewport
+        $(this).css('visibility', 'visible');
         $(this).addClass('animated bounceInLeft');
     });
     $('.content-section-a').appear({ force_process: true, interval: 20 });
     $('.content-section-a').on('appear', function (event, $all_appeared_elements) {
         // this element is now inside browser viewport
+        $(this).css('visibility', 'visible');
         $(this).addClass('animated bounceInRight');
     });
 
